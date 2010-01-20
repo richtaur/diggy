@@ -1,0 +1,18 @@
+DESCRIPTION
+
+What DGE is:
+	- DHTML game engine
+
+What DGE is not:
+	- useful for standard webapps
+	- DOM selector
+	- event manager
+	- application framework
+
+TODO:
+
+- replace el.style calls to use DGE.css() instead (might not be a good idea, for performance's sake)
+- need global methods for out() and over() for the whole screen
+- need global methods for the keyboard
+- take out constants like SPRITE_WIDTH and put them where they belong, on DGE.Sprite
+  - additionally, will need a .conf to work for anything like that to set the defaults elegantly ... right?
