@@ -1,15 +1,23 @@
-// TODO: allow arrays and/or objects to be added via constructor, so like:
-//new Loader({load : that}, thisIsAnArray, 'this too', 'and this');
-// --- DOCS DONE
 /**
  * Provides a Loader utility for fetching assets and reporting progress.
- * @param {Array} files An array of assets to fetch.
+ * @param {Array} files An array of objects of filenames to fetch.
  * @param {Object} callbacks An Object containing the functions to call when certain events fire (change, complete, error).
  * @namespace DGE
  * @class Loader
  * @constructor
  */
-DGE.Loader = function(files, callbacks) {
+DGE.Loader = function(assets, callbacks) {
+
+	callbacks = (callbacks || {});
+
+	var dateStart = new Date();
+	var dateStop;
+	var fetched = 0;
+	var files = [];
+	var img;
+	var total = 0;
+
+	function init() {
 
 // Uncomment to make the Loader take 5-10 seconds
 /*
@@ -25,15 +33,25 @@ files = [
 ];
 */
 
-	callbacks = (callbacks || {});
+		for (var i = 0; i < assets.length; i++) {
 
-	var dateStart = new Date(),
-		dateStop,
-		fetched = 0,
-		img,
+			var asset = assets[i];
+
+			if (typeof(asset) == 'string') {
+				files.push(asset);
+			} else if (asset.length === undefined) {
+				for (var k in asset) {
+					files.push(asset[k]);
+				}
+			} else {
+				for (var n = 0; n < asset.length; n++) {
+					files.push(asset[n]);
+				}
+			}
+
+		}
+
 		total = files.length;
-
-	var init = function() {
 
 		for (var i = 0; i < total; i++) {
 
@@ -43,14 +61,14 @@ files = [
 				if (callbacks.error) callbacks.error(e);
 				increment();
 			};
-			//img.src = files[i];
 			img.src = (DGE.conf.baseUrl + files[i]);
+console.log('just fetched ' + img.src);
 
 		}
 
 	};
 
-	var increment = function() {
+	function increment() {
 
 		fetched++;
 

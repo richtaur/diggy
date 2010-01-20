@@ -489,8 +489,8 @@ TODO this doesn't work for shit
  */
 DGE.Sprite.prototype.centerOn = function(target) {
 
-	var x = target._x,
-		y = target._y;
+	var x = target._x;
+	var y = target._y;
 
 	// This Sprite's offset
 	x -= (this._width / 2);

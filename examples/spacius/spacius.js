@@ -36,7 +36,6 @@
 
 		DGE.init({
 			baseURL : 'img/',
-			libsURL : '../../clientjs/libs/',
 			interval : DGE.Interval.formatFPS(30),
 			stage : {
 				id : 'playground',
@@ -160,6 +159,7 @@
 	function main() {
 
 		// Create a new enemy?
+		// Always create one if there aren't any, otherwise a 1% chance.
 		if ((numUFOs == 0) || (DGE.rand(1, 100) == 1)) {
 
 			numUFOs++;
