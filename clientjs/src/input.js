@@ -13,7 +13,8 @@ DGE.controls.on('keyDown', keyDownFn);
  */
 DGE.controls = (function() {
 
-var fnUp, fnDown;
+var fnUp;
+var fnDown;
 var isDown = {};
 
 DGE.addEvent(window, 'keydown', function(e) {
@@ -30,6 +31,17 @@ DGE.addEvent(window, 'keyup', function(e) {
 
 return {
 
+	CONTROL : 17,
+	ESCAPE : 27,
+	SHIFT : 16,
+	SPACE : 32,
+	TAB : 9,
+
+	UP : 38,
+	DOWN : 40,
+	LEFT : 37,
+	RIGHT : 39,
+
 	isDown : function(keyCode) {
 		return !!isDown[keyCode];
 	},
@@ -38,18 +50,7 @@ return {
 	},
 	down : function(fn) {
 		fnDown = fn;
-	},
-
-	UP : 38,
-	DOWN : 40,
-	LEFT : 37,
-	RIGHT : 39,
-
-	CONTROL : 17,
-	ESCAPE : 27,
-	SHIFT : 16,
-	SPACE : 32,
-	TAB : 9
+	}
 
 };
 

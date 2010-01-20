@@ -1,17 +1,46 @@
-// TODO
-
-DGE.Data = (function() {
+// TODO: implement this. data needs to be persistent
+/**
+ * A extremely simple persistent memory manager.
+ * @namespace DGE
+ * @class data
+ */
+DGE.data = (function() {
 
 	var data = {};
 
+	/**
+	 * Empties the data.
+	 * @method empty
+	 * @final
+	 * @public
+	 * @static
+	 */
 	function empty() {
 		data = {};
 	};
 
+	/**
+	 * Gets the data assigned to a given key.
+	 * @param {String} key The key of the data to fetch.
+	 * @return {Object} The data associated with the passed key.
+	 * @method get
+	 * @final
+	 * @public
+	 * @static
+	 */
 	function get(key) {
 		return data[key];
 	};
 
+	/**
+	 * Sets the data assigned to a given key.
+	 * @param {String} key The key of the data to set.
+	 * @param {Object} value The value to set.
+	 * @method set
+	 * @final
+	 * @public
+	 * @static
+	 */
 	function set(key, value) {
 
 		if (typeof(key) == 'object') {

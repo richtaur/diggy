@@ -14,7 +14,6 @@ DGE.Loader = function(assets, callbacks) {
 	var dateStop;
 	var fetched = 0;
 	var files = [];
-	var img;
 	var total = 0;
 
 	function init() {
@@ -55,14 +54,13 @@ files = [
 
 		for (var i = 0; i < total; i++) {
 
-			img = new Image();
+			var img = new Image();
 			img.onload = increment;
 			img.onerror = function(e) {
 				if (callbacks.error) callbacks.error(e);
 				increment();
 			};
 			img.src = (DGE.conf.baseUrl + files[i]);
-console.log('just fetched ' + img.src);
 
 		}
 

@@ -1,5 +1,3 @@
-// --- DOCS DONE
-
 // TODO Audit these; there should be one MAYBE two ways to do something in DGE. Make sure all the components are
 // acting independently, semantically, cohesively and sensically
 
@@ -16,9 +14,19 @@
  * @type Object
  */
 DGE.conf = {
-	baseUrl : '',
+	baseURL : '',
 	interval : 34 // ~30 FPS
 };
+
+/* TODO: maybe make this:
+DGE.platform = {
+	name : 'browser',
+	BROWSER : 'browser',
+	TITANIUM : 'titanium'
+};
+*/
+
+DGE.platform = {};
 
 /**
  * The constant for any web browser.
@@ -26,7 +34,7 @@ DGE.conf = {
  * @property PLATFORM_BROWSER
  * @type String
  */
-DGE.PLATFORM_BROWSER = 'browser';
+DGE.platform.BROWSER = 'browser';
 
 /**
  * The constant for the Titanium platform.
@@ -34,7 +42,7 @@ DGE.PLATFORM_BROWSER = 'browser';
  * @property PLATFORM_TITANIUM
  * @type String
  */
-DGE.PLATFORM_TITANIUM = 'titanium';
+DGE.platform.TITANIUM = 'titanium';
 
 /**
  * A string representing the platform DGE is running on.
@@ -42,12 +50,12 @@ DGE.PLATFORM_TITANIUM = 'titanium';
  * @property _platform
  * @type String
  */
-DGE._platform = (function() {
+DGE.platform.name = (function() {
 
-	var platform = DGE.PLATFORM_BROWSER;
+	var platform = DGE.platform.BROWSER;
 
 	if (typeof(Titanium) == 'object') {
-		platform = DGE.PLATFORM_TITANIUM;
+		platform = DGE.platform.TITANIUM;
 	}
 
 	return platform;

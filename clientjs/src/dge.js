@@ -1,6 +1,5 @@
 // --- DOCS DONE
 // TODO make a DGE.diggy() method. it's for easter eggs!!
-// TODO do platform this way: DGE.platform.name = 'bla', DGE.platform.PLATFORM_BLA = 'etc';
 // TODO implement plot(); plot sets the sprite. you can also pass in one object {x:x,y:y} or x,y to set
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
@@ -186,11 +185,15 @@ DGE.dashToCamelCase = function(text) {
  */
 DGE.debug = function(msg) {
 
-	switch (DGE._platform) {
-		case DGE.PLATFORM_BROWSER:
-			console.log.apply(DGE, arguments);
+	switch (DGE.platform.name) {
+		case DGE.platform.BROWSER:
+			try {
+				console.log.apply(DGE, arguments);
+			} catch(e) {
+				console.log(Array.prototype.join.apply(arguments, [',']));
+			}
 			break;
-		case DGE.PLATFORM_TITANIUM:
+		case DGE.platform.TITANIUM:
 			Titanium.API.info.apply(DGE, arguments);
 			break;
 	}
@@ -204,6 +207,7 @@ DGE.debug = function(msg) {
  * @param {Object} scope (optional) The scope within which to call the function.
  * @method execScript
  * @static
+ * TODO might not need this anymore if we ditch SM2
  */
 DGE.exec = function(fn, ms, scope) {
 
@@ -229,7 +233,6 @@ DGE.execScript = function(src) {
 	var script = document.createElement('script');
 	script.src = (DGE.conf.libsURL + src);
 	document.getElementsByTagName('head')[0].appendChild(script);
-DGE.debug('fetched script:', script.src);
 };
 
 /**

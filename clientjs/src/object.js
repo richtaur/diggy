@@ -14,8 +14,8 @@ DGE.Object = function(conf) {
  * @method init
  */
 DGE.Object.prototype.init = function(conf) {
-	this._events = {};
-	this._values = {};
+	this._events = (this._events || {});
+	this._values = (this._values || {});
 	this.set(conf);
 };
 
@@ -27,6 +27,7 @@ DGE.Object.prototype.init = function(conf) {
  * @method fire
  */
 DGE.Object.prototype.fire = function(key, value) {
+//DGE.debug('fire(', key, ')', value, this._events);
 	if (key in this._events) this._events[key].apply(this, [value]);
 	return this;
 };
@@ -56,6 +57,7 @@ DGE.Object.prototype.set = function(key, value) {
 			arguments.callee.apply(this, [i, key[i]]);
 		}
 	} else {
+//DGE.debug('set(', key, ')', value);
 		if (key == 'id') this._id = value;
 		this._values[key] = value;
 		this.fire(key, value);
@@ -73,7 +75,10 @@ DGE.Object.prototype.set = function(key, value) {
  * @method on
  */
 DGE.Object.prototype.on = function(key, e) {
+//DGE.debug('on(', key, ')', e);
 	this._events[key] = e;
+//DGE.debug('and now _events: ', this._events);
+	return this;
 };
 
 /**
