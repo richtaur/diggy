@@ -14,7 +14,8 @@ mapEditor = (function() {
 	var depth = 'below';
 	var drawn = {
 		above : {},
-		below : {}
+		below : {},
+		script : {}
 	};
 	var editorConf;
 	var isOverMap = true;
@@ -35,6 +36,7 @@ mapEditor = (function() {
 			}
 		});
 
+		DGE.Text.defaults.color = editorConf.fgColor;
 		DGE.Text.defaults.font = 'Verdana';
 
 		map = new DGE.Sprite({
@@ -88,6 +90,7 @@ mapEditor = (function() {
 			zIndex : Z_INDEX_UI
 		}).setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
 
+/*
 		ui.mapDialog = new DGE.Sprite({
 			click : function(x, y) {
 
@@ -96,6 +99,25 @@ mapEditor = (function() {
 			fill : '#000',
 			hide : true,
 			opacity : 0.75,
+			over : function() {
+				isOverMap = false;
+			},
+			out : function() {
+				isOverMap = true;
+			},
+			width : (DGE.STAGE_WIDTH - (BUFFER * 2)),
+			height : (DGE.STAGE_HEIGHT - (BUFFER * 3) - UI_HEIGHT),
+			x : BUFFER,
+			y : ((BUFFER * 2) + UI_HEIGHT),
+			zIndex : Z_INDEX_UI
+		}).setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
+*/
+
+		ui.saveDialog = new DGE.Text({
+			fill : editorConf.bgColor,
+			font : 'Courier, Sans-Serif',
+			hide : true,
+			opacity : 0.8,
 			over : function() {
 				isOverMap = false;
 			},
@@ -122,7 +144,6 @@ mapEditor = (function() {
 
 		ui.mouseCoords = new DGE.Text({
 			id : 'mouse_coords',
-			color : editorConf.fgColor,
 			x : BUFFER,
 			y : BUFFER,
 			zIndex : Z_INDEX_UI
@@ -178,7 +199,11 @@ mapEditor = (function() {
 
 		ui.loadButton = new DGE.Sprite({
 			click : function() {
-DGE.debug('load()');
+
+				var filename = prompt('Which map which you like to load?');
+
+				if (filename) loadMap(filename);
+
 			},
 			cursor : true,
 			over : function() {
@@ -196,6 +221,7 @@ DGE.debug('load()');
 
 		uiX -= (BUFFER + UI_WIDTH);
 
+/*
 		ui.mapButton = new DGE.Sprite({
 			click : function() {
 
@@ -223,6 +249,7 @@ DGE.debug('load()');
 			.setSheetCoords(6, 4);
 
 		uiX -= (BUFFER + UI_WIDTH);
+*/
 
 		ui.depthButton = new DGE.Sprite({
 			click : function() {
@@ -331,21 +358,44 @@ DGE.debug('load()');
 
 		switch (keyCode) {
 			case DGE.controls.UP:
-				map._y -= editorConf.tileHeight;
-				map.plot();
-				break;
-			case DGE.controls.DOWN:
 				map._y += editorConf.tileHeight;
 				map.plot();
 				break;
-			case DGE.controls.LEFT:
-				map._x -= editorConf.tileWidth;
+			case DGE.controls.DOWN:
+				map._y -= editorConf.tileHeight;
 				map.plot();
 				break;
-			case DGE.controls.RIGHT:
+			case DGE.controls.LEFT:
 				map._x += editorConf.tileWidth;
 				map.plot();
 				break;
+			case DGE.controls.RIGHT:
+				map._x -= editorConf.tileWidth;
+				map.plot();
+				break;
+		}
+
+	};
+
+	function loadMap(filename) {
+
+		try {
+
+			DGE.xhr(
+				'GET',
+				DGE.printf('maps/%s', filename),
+				{
+					error : function(e) {
+						alert(DGE.printf('Error loading %s, sorry.', filename));
+					},
+					complete : function(data) {
+						setMap(DGE.json.decode(data.responseText));
+					}
+				}
+			);
+
+		} catch(e) {
+			alert(DGE.printf("Couldn't find %s, sorry.", filename));
 		}
 
 	};
@@ -376,8 +426,11 @@ DGE.debug('load()');
 
 		drawn = {
 			above : {},
-			below : {}
+			below : {},
+			script : {}
 		};
+
+		map.plot(0, 0);
 
 	};
 
@@ -401,6 +454,64 @@ DGE.debug('load()');
 			}).setSheet(sheets.tiles).setSheetCoords(brush.x, brush.y);
 
 		}
+
+	};
+
+	// Sweet christ this function is ugly
+	function setMap(data) {
+
+		newMap();
+
+		for (var key in data) {
+			for (var x = 0; x < data[key].length; x++) {
+				if (data[key][x] !== null) {
+					for (var y = 0; y < data[key][x].length; y++) {
+						if (data[key][x][y] !== null) {
+
+							var coords = data[key][x][y].split(',');
+							var drawnKey = DGE.printf('%s,%s', x, y);
+
+							drawn[key][drawnKey] = new DGE.Sprite({
+								addTo : map,
+								x : (x * editorConf.tileWidth),
+								y : (y * editorConf.tileHeight),
+								width : editorConf.tileWidth,
+								height : editorConf.tileHeight,
+								zIndex : ((key == 'below') ? Z_INDEX_BELOW : Z_INDEX_ABOVE)
+							}).setSheet(sheets.tiles).setSheetCoords(coords[0], coords[1]);
+						
+						}
+					}
+				}
+			}
+		}
+
+	};
+
+	function showSave() {
+
+		var json = {
+			above : [],
+			below : [],
+			script : []
+		};
+
+		for (var depth in drawn) {
+			for (var key in drawn[depth]) {
+
+				var coords = key.split(',');
+				var tx = coords[0];
+				var ty = coords[1];
+				var sx = drawn[depth][key]._sheetX;
+				var sy = drawn[depth][key]._sheetY;
+
+				if (!json[depth][tx]) json[depth][tx] = [];
+				json[depth][tx][ty] = DGE.printf('%s,%s', sx, sy);
+
+			}
+		}
+
+		ui.saveDialog.content(DGE.json.encode(json));
 
 	};
 

@@ -71,7 +71,7 @@ DGE.xhr = function(method, url, callbacks, data) {
   req.onreadystatechange = function() {
     if (req.readyState == 4) {
 
-      if (callbacks.complete) callbacks.complete();
+      if (callbacks.complete) callbacks.complete(req);
 
       if (req.status == 200) {
         if (callbacks.success) callbacks.success(req);

@@ -536,6 +536,16 @@ DGE.Sprite.prototype.click = function(fn) {
 
 };
 
+/*
+ * Sets the content of this Sprite.
+ * @param {String} html The content to set.
+ * @return {Object} this (for chaining).
+ */
+DGE.Sprite.prototype.content = function(html) {
+	this._node.innerHTML = html;
+	return this;
+};
+
 /**
  * Gets or sets the dimensions (width/height) of this Sprite.
  * @param {Number | undefined} width The width to set the Sprite or undefined to get the dimensions.

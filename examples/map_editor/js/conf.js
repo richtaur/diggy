@@ -9,8 +9,8 @@ var conf = {
 	tileHeight : 24,
 	tilesX : 1000,
 	tilesY : 1000,
-	width : 640,
-	height : 480,
+	width : 624, // 26 tiles
+	height : 480, // 20 tiles
 };
 
 mapEditor(conf);
