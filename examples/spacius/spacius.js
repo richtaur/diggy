@@ -25,7 +25,7 @@
 		var color = (speed * 3);
 
 		this.fill(DGE.printf('#%s%s%s', color, color, color));
-		this.setXY(DGE.STAGE_WIDTH, DGE.rand(0, DGE.STAGE_HEIGHT));
+		this.plot(DGE.STAGE_WIDTH, DGE.rand(0, DGE.STAGE_HEIGHT));
 		this.speed(speed);
 
 		return this;
@@ -98,7 +98,7 @@
 				height : 1
 			})
 				.reset()
-				.setXY(DGE.rand(0, DGE.STAGE_WIDTH), DGE.rand(0, DGE.STAGE_HEIGHT));
+				.plot(DGE.rand(0, DGE.STAGE_WIDTH), DGE.rand(0, DGE.STAGE_HEIGHT));
 
 		}
 
@@ -144,7 +144,7 @@
 					//sfx.shot.play();
 
 					shots[i]._active = true;
-					shots[i].setXY((ship._x + ship._width), (ship._y + 2));
+					shots[i].plot((ship._x + ship._width), (ship._y + 2));
 					shots[i].show();
 
 					break;

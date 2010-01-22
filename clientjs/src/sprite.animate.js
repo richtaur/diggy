@@ -6,7 +6,7 @@
  * Animates a Sprite.
  * @param {Object} ops A key/value pair of rules (from, to).
  * @param {Number} ms The number of milliseconds the animation should last (default: 1000).
- * @param {Object} callbacks An object of functions to call when certain events happen (complete, frame).
+ * @param {Object} callbacks An object of functions to call when certain events happen (complete, tween).
  * @return {Object} this (for chaining).
  * @method animate
  */
@@ -16,8 +16,8 @@ DGE.Sprite.prototype.animate = function(ops, ms, callbacks) {
 	ms = (ms || 1000);
 	if (ms < DGE.conf.interval) ms = 1000;
 
-	var frames = Math.ceil(ms / DGE.conf.interval),
-		that = this;
+	var frames = Math.ceil(ms / DGE.conf.interval);
+	var that = this;
 
 	for (var i in ops) {
 		ops[i].inc = ((ops[i].to - ops[i].from) / frames);
@@ -30,7 +30,7 @@ DGE.Sprite.prototype.animate = function(ops, ms, callbacks) {
 			ops[i].from += ops[i].inc;
 
 			this[i](ops[i].from);
-			if (callbacks.frame) callbacks.frame.apply(this, [i, ops[i].from]);
+			if (callbacks.tween) callbacks.tween.apply(this, [i, ops[i].from, frames]);
 
 		}
 

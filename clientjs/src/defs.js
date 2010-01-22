@@ -26,12 +26,18 @@ DGE.platform = {
 };
 */
 
+/**
+ * The platform Object contains information on the platform Diggy is running on.
+ * @final
+ * @property platform
+ * @type Object
+ */
 DGE.platform = {};
 
 /**
  * The constant for any web browser.
  * @final
- * @property PLATFORM_BROWSER
+ * @property platform.BROWSER
  * @type String
  */
 DGE.platform.BROWSER = 'browser';
@@ -39,7 +45,7 @@ DGE.platform.BROWSER = 'browser';
 /**
  * The constant for the Titanium platform.
  * @final
- * @property PLATFORM_TITANIUM
+ * @property platform.TITANIUM
  * @type String
  */
 DGE.platform.TITANIUM = 'titanium';
@@ -47,7 +53,7 @@ DGE.platform.TITANIUM = 'titanium';
 /**
  * A string representing the platform DGE is running on.
  * @final
- * @property _platform
+ * @property platform.name
  * @type String
  */
 DGE.platform.name = (function() {
@@ -70,13 +76,13 @@ DGE.platform.name = (function() {
  */
 (function() {
 
-switch (DGE._platform) {
-	case DGE.PLATFORM_BROWSER:
+switch (DGE.platform.name) {
+	case DGE.platform.BROWSER:
 		// TODO verify which browsers this works on
 		DGE.DISPLAY_WIDTH = window.innerWidth;
 		DGE.DISPLAY_HEIGHT = window.innerHeight;
 		break;
-	case DGE.PLATFORM_TITANIUM:
+	case DGE.platform.TITANIUM:
 		DGE.DISPLAY_WIDTH = Titanium.Platform.displayCaps.width;
 		DGE.DISPLAY_HEIGHT = Titanium.Platform.displayCaps.height;
 		break;

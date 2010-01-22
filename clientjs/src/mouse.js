@@ -1,4 +1,3 @@
-// --- DOCS DONE
 /**
  * The DGE.Mouse class contains methods and properties to handle player input from a mouse.
 
@@ -18,21 +17,21 @@
  */
 DGE.Mouse = (function() {
 
-	var down = false,
-		fns = {
-			click : DGE.eventMethod(DGE.Mouse),
-			move : DGE.eventMethod(DGE.Mouse),
-			up : DGE.eventMethod(DGE.Mouse),
-			down : DGE.eventMethod(DGE.Mouse),
-			over : DGE.eventMethod(DGE.Mouse),
-			out : DGE.eventMethod(DGE.Mouse)
-		},
-		x = 0,
-		y = 0;
+	var down = false;
+	var fns = {
+		click : DGE.eventMethod(DGE.Mouse),
+		move : function() {},
+		up : DGE.eventMethod(DGE.Mouse),
+		down : function() {},
+		over : DGE.eventMethod(DGE.Mouse),
+		out : DGE.eventMethod(DGE.Mouse)
+	};
+	var x = 0;
+	var y = 0;
 
 	DGE.addEvent(window, 'mousedown', function(e) {
 		down = true;
-		fns.down(e);
+		fns.down(x, y);
 	});
 
 	DGE.addEvent(window, 'mouseup', function(e) {
@@ -50,20 +49,15 @@ DGE.Mouse = (function() {
 			y = e.clientY;
 		}
 
-		fns.move(e);
+		fns.move(x, y);
 
 	});
 
 	return {
 
-		/**
-		 * Read-only: is set to true if the mouse button is currently down.
-		 * @property _down
-		 * @final
-		 * @static
-		 * @type Boolean
-		 */
-		_down : down,
+		isDown : function() {
+			return down;
+		},
 
 		/**
 		 * Read-only: The current x position of the mouse cursor.
@@ -83,7 +77,7 @@ DGE.Mouse = (function() {
 		 * @static
 		 * @type Number
 		 */
-		_y, y,
+		_y : y,
 
 		/**
 		 * Fires the listener of the stage click event, or sets the listener to a new function.
@@ -103,7 +97,9 @@ DGE.Mouse = (function() {
 		 * @final
 		 * @static
 		 */
-		move : fns.move,
+		move : function(e) {
+			fns.move = e;
+		},
 
 		/**
 		 * Fires the listener of the stage mouse up event, or sets the listener to a new function.
@@ -123,7 +119,9 @@ DGE.Mouse = (function() {
 		 * @final
 		 * @static
 		 */
-		down : fns.down,
+		down : function(e) {
+			fns.down = e;
+		},
 
 		/**
 		 * Fires the listener of the stage mouse over event, or sets the listener to a new function.

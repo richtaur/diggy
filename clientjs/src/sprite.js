@@ -2,6 +2,10 @@
 
 // TODO: there are issues with x(), y(), setXY(), cneter(), dimensions, plot(), holy FUCK how should this work?!
 // TODO: also think about _active and how that should work
+// TODO: see about extending DGE.Object (might be difficult, might need crazy __init__ logic)
+// TODO: baseURL should be DGE.Sprite.defaults.baseURL or something
+// then there should be the same for DGE.Audio and whatever else
+// TODO: limit number of align() methods to just align() (get rid of Bottom and Right, etc.)
 
 /**
  * An extensible Sprite class that normalizes DOM API and behavior.
@@ -152,13 +156,6 @@ DGE.Sprite.prototype.init = function(conf, extra) {
 	// Apply dynamic attributes and methods
   this.angleChange = DGE.eventMethod(this);
   this.angle = DGE.attrMethod(this, this.angleChange);
-  this.clickChange = DGE.eventMethod(this, function(fn) {
-		var that = this;
-		this._node.onclick = function() {
-			fn.apply(that);
-		};
-	});
-  this.click = DGE.eventMethod(this, this.clickChange);
   this.cursor = DGE.attrMethod(this, function(cursor) {
 		this.setCSS('cursor', (cursor ? 'pointer' : 'auto'));
 	});
@@ -227,7 +224,7 @@ DGE.Sprite.prototype.init = function(conf, extra) {
 	// TODO: this should be done in sprite.tiles.js now
 	conf.x = (conf.x || 0);
 	conf.y = (conf.y || 0);
-	this.setXY(conf.x, conf.y);
+	this.plot(conf.x, conf.y);
 	// TODO: ^ should that be there?
 	this.dimensions(conf.width, conf.height);
 
@@ -293,16 +290,16 @@ DGE.Sprite.prototype.align = function(pos, offset) {
 
 	switch (pos) {
 		case 'left':
-			this.setXY(offset);
+			this.plot(offset);
 			break;
 		case 'right':
-			this.setXY(DGE.STAGE_WIDTH - this._width + offset);
+			this.plot(DGE.STAGE_WIDTH - this._width + offset);
 			break;
 		case 'top':
-			this.setXY(undefined, offset);
+			this.plot({y : offset});
 			break;
 		case 'bottom':
-			this.setXY(undefined, (DGE.STAGE_HEIGHT - this._height + offset));
+			this.plot({y : (DGE.STAGE_HEIGHT - this._height + offset)});
 			break;
 		default:
 			throw new Error(this.printf('Unknown setting "%s"', attr));
@@ -356,7 +353,7 @@ DGE.Sprite.prototype.alignBottom = function(offset) {
  * TODO
  */
 DGE.Sprite.prototype.anchorToStage = function() {
-	this.setXY(this.getAbsoluteXY());
+	this.plot(this.getAbsoluteXY());
 	return this.addTo(DGE.stage);
 };
 
@@ -476,7 +473,7 @@ DGE.Sprite.prototype.centerXY = function(x, y) {
 	width = (width || DGE.STAGE_WIDTH);
 	height = (height || DGE.STAGE_HEIGHT);
 
-	return this.setXY((x ? newX : undefined), (y ? newY : undefined));
+	return this.plot((x ? newX : undefined), (y ? newY : undefined));
 
 };
 
@@ -506,7 +503,36 @@ DGE.Sprite.prototype.centerOn = function(target) {
 		y += target._node.parentNode.offsetTop;
 	}
 
-	return this.setXY(x, y);
+	return this.plot(x, y);
+
+};
+
+DGE.Sprite.prototype.click = function(fn) {
+
+	if (fn === undefined) {
+		if (this._click) this._click.apply(this);
+	} else {
+		var that = this;
+		this._click = fn;
+		this._node.onclick = function(e) {
+
+			if (e.clientX === undefined) {
+				e.clientX = e.pageX;
+				e.clientY = e.pageY;
+			}
+
+			that._click.apply(that, [e.clientX, e.clientY]);
+
+		};
+	}
+
+  this.clickChange = DGE.eventMethod(this, function(fn) {
+		var that = this;
+		this._node.onclick = function() {
+			fn.apply(that);
+		};
+	});
+  this.click = DGE.eventMethod(this, this.clickChange);
 
 };
 
@@ -765,16 +791,37 @@ DGE.Sprite.prototype.out = function(fn) {
 };
 
 /**
- * Represent the x/y coordinates in the DOM.
- * Positions this Sprite's DOM Object based on this._x and this._y.
+ * Positions the Sprite based on the passed parameters or last settings to ._x and ._y.
+ * Any of these work:<br>
+ * sprite.plot(); // uses ._x and ._y
+ * sprite.plot(x, y);
+ * sprite.plot({x : x, y : y});
  * @return {Object} this (for chaining).
  * @method plot
  */
 DGE.Sprite.prototype.plot = function() {
+
+	if (arguments[0] !== undefined) {
+		if (typeof(arguments[0]) == 'number') {
+			this._x = arguments[0];
+			if (typeof(arguments[0]) == 'number') {
+				this._y = arguments[1];
+			}
+		} else {
+			if (typeof(arguments[0].x) == 'number') {
+				this._x = arguments[0].x;
+			}
+			if (typeof(arguments[0].y) == 'number') {
+				this._y = arguments[0].y;
+			}
+		}
+	}
+
 	return this.setCSS({
 		left : (this._x + 'px'),
 		top : (this._y + 'px')
 	});
+
 };
 
 /**
@@ -816,6 +863,7 @@ DGE.Sprite.prototype.setCSS = function(key, value) {
  * @return {Object} this (for chaining).
  * @method setXY
  */
+/*
 DGE.Sprite.prototype.setXY = function(x, y) {
 
 	if ((x === undefined) && (y === undefined)) {
@@ -838,6 +886,7 @@ DGE.Sprite.prototype.setXY = function(x, y) {
 	return this.plot();
 
 };
+*/
 
 /**
  * Shows this Sprite (under the hood: unhides it using CSS).

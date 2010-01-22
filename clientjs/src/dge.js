@@ -1,6 +1,8 @@
 // --- DOCS DONE
 // TODO make a DGE.diggy() method. it's for easter eggs!!
 // TODO implement plot(); plot sets the sprite. you can also pass in one object {x:x,y:y} or x,y to set
+// TODO: need a better way to manage Intervals and stuff. does it even make sense to pipe everything through 
+// DGE.main anymore? it makes it annoying to deal with tweening, etc.
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
  * http://diggy.sistertrain.com/
@@ -403,5 +405,17 @@ DGE.setCSS = function(el, style, value) {
 	el.style[style] = value;
 
 	return el;
+
+};
+
+/**
+ * Vibrates the platform (if supported, for mobile devices).
+ * @method vibrate
+ */
+DGE.vibrate = function() {
+
+	if (DGE.platform.name == DGE.platform.TITANIUM) {
+		Titanium.Media.vibrate();
+	}
 
 };

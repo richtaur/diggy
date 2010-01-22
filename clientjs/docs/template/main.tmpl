@@ -607,21 +607,6 @@
                     </div>
                 #end if
 
-                #if $filenames
-                    <div id="fileList" class="module">
-                        <h4>Files</h4>
-                        <ul class="content">        
-                            #for $filedef in $filenames
-                                #set $css = ""
-                                #if $filedef == $filename
-                                    #set $css = "selected"
-                                #end if
-                                <li class="$css"><a href="${filedef}.html" title="$filedef">$filedef</a></li>
-                            #end for
-                        </ul>
-                    </div>
-                #end if
-
                 #if $properties
                     <div id="propertyList" class="module">
                         <h4>Properties</h4>
@@ -661,6 +646,21 @@
                         <ul class="content">        
                             #for $config in $configs
                                 <li class="${config.access}#if $config.deprecated# deprecated#end if#"><a href="#config_${config.name}" title="$config.name">$config.name</a></li>
+                            #end for
+                        </ul>
+                    </div>
+                #end if
+
+                #if $filenames
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                            #for $filedef in $filenames
+                                #set $css = ""
+                                #if $filedef == $filename
+                                    #set $css = "selected"
+                                #end if
+                                <li class="$css"><a href="${filedef}.html" title="$filedef">$filedef</a></li>
                             #end for
                         </ul>
                     </div>

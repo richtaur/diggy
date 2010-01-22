@@ -51,6 +51,7 @@ DGE.Text = DGE.extend(DGE.Sprite, function(conf) {
 	}
 
 	// Could these be added into an additional conf parameter?
+	if (conf.shadow !== undefined) this.shadow(conf.shadow);
 	if (conf.text !== undefined) this.text(conf.text);
 	if (conf.wrap !== undefined) this.wrap(conf.wrap);
 

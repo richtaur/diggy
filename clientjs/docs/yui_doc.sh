@@ -29,4 +29,6 @@ yuiversion=3
 ##############################################################################
 # add -s to the end of the line to show items marked private
 
+rm -rf $HOME/Documents/projects/diggy/clientjs/docs/html
+rm -rf $HOME/Documents/projects/diggy/clientjs/docs/json
 $yuidoc_home/bin/yuidoc.py $parser_in -p $parser_out -o $generator_out -t $template -v $version -Y $yuiversion
