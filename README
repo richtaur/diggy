@@ -1,18 +1,17 @@
-DESCRIPTION
+ABOUT
 
-What DGE is:
-	- DHTML game engine
+Diggy is a DHTML Game Engine (DGE).
+If you tried to pronounce "DGE", you'd probably say it like "Diggy".
+That's where the name came from.
 
-What DGE is not:
-	- useful for standard webapps
-	- DOM selector
-	- event manager
-	- application framework
+Diggy is not:
+	- useful for standard web apps
+	- a DOM selector
+	- an event manager
+	- a canvas or SVG library
+	- meant to do anything but make games
 
-TODO:
+AUTHOR
 
-- replace el.style calls to use DGE.css() instead (might not be a good idea, for performance's sake)
-- need global methods for out() and over() for the whole screen
-- need global methods for the keyboard
-- take out constants like SPRITE_WIDTH and put them where they belong, on DGE.Sprite
-  - additionally, will need a .conf to work for anything like that to set the defaults elegantly ... right?
+Matt Hackett
+richtaur.com
