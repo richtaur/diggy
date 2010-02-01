@@ -1,4 +1,4 @@
-// Compatible with Diggy alpha 0 ... hurrrrrr
+// Compatible with Diggy v0.1
 (function() {
 
 	var GROUP_UFOS = 'ufos';
@@ -8,12 +8,14 @@
 	var SPEED_SHOT = 15;
 	var SPEED_UFO = 3;
 
+	var main;
 	var music;
 	var numUFOs;
 	var score = {};
 	var sfx;
 	var ship;
 	var shots = [];
+	var stars = [];
 
 	var Star = DGE.extend(DGE.Sprite, function(conf) {
 		this.init(conf);
@@ -24,7 +26,7 @@
 		var speed = DGE.rand(1, 3);
 		var color = (speed * 3);
 
-		this.fill(DGE.printf('#%s%s%s', color, color, color));
+		this.fill(DGE.sprintf('#%s%s%s', color, color, color));
 		this.plot(DGE.STAGE_WIDTH, DGE.rand(0, DGE.STAGE_HEIGHT));
 		this.speed(speed);
 
@@ -35,8 +37,6 @@
 	function init() {
 
 		DGE.init({
-			baseURL : 'img/',
-			interval : DGE.Interval.formatFPS(30),
 			stage : {
 				id : 'playground',
 				background : '#000',
@@ -46,11 +46,11 @@
 		});
 
 		new DGE.Loader([
-			'explode.gif',
-			'ship.gif',
-			'ship_moving.gif',
-			'shot.gif',
-			'ufo_ds.gif'
+			'gfx/explode.gif',
+			'gfx/ship.gif',
+			'gfx/ship_moving.gif',
+			'gfx/shot.gif',
+			'gfx/ufo_ds.gif'
 		]);
 
 		score.text = new DGE.Text({
@@ -64,18 +64,18 @@
 		});
 
 		ship = new DGE.Sprite({
-			image : 'ship.gif',
+			image : 'gfx/ship.gif',
 			width : 32,
 			height : 16,
 			zIndex : 1
-		});
+		}).start();
 
 		for (var i = 0; i < NUM_SHOTS; i++) {
 			shots.push(new DGE.Sprite({
 				_active : false,
 				angle : 180,
 				hide : true,
-				image : 'shot.gif',
+				image : 'gfx/shot.gif',
 				move : DGE.Sprite.move.angle,
 				ping : function() {
 					if (this.isOutOfBounds(true)) this._active = false;
@@ -83,12 +83,12 @@
 				speed : SPEED_SHOT,
 				width : 8,
 				height : 8
-			}));
+			}).start());
 		}
 
 		for (var i = 0; i < NUM_STARS; i++) {
 
-			new Star({
+			stars.push(new Star({
 				angle : 0,
 				move : DGE.Sprite.move.angle,
 				ping : function() {
@@ -98,28 +98,27 @@
 				height : 1
 			})
 				.reset()
-				.plot(DGE.rand(0, DGE.STAGE_WIDTH), DGE.rand(0, DGE.STAGE_HEIGHT));
+				.plot(DGE.rand(0, DGE.STAGE_WIDTH), DGE.rand(0, DGE.STAGE_HEIGHT))
+			);
 
 		}
 
-/*
-		var music = new DGE.Music({
-			file : 'theme.mp3',
+		var music = new DGE.Audio({
+			file : 'audio/theme.mp3',
 			loop : true
 		});
 
 		sfx = {
 			shot : new DGE.Audio({
-				file : 'shot.mp3'
+				file : 'audio/shot.mp3'
 			}),
 			ufoDeath : new DGE.Audio({
-				file : 'ufo_die.mp3'
+				file : 'audio/ufo_die.mp3'
 			})
 		};
-*/
 
 		DGE.controls.down(keyDown);
-		//music.play();
+		music.play();
 		newGame();
 
 	};
@@ -128,7 +127,7 @@
 
 		numUFOs = 0;
 		score.value = 0;
-		score.text.text(DGE.printf('Score: %s', DGE.formatNumber(score.value)));
+		score.text.text(DGE.sprintf('Score: %s', DGE.formatNumber(score.value)));
 		ship.center().show();
 		DGE.Sprite.getByGroup(GROUP_UFOS, 'remove');
 
@@ -141,7 +140,7 @@
 			for (var i = 0; i < NUM_SHOTS; i++) {
 				if (!shots[i]._active) {
 
-					//sfx.shot.play();
+					sfx.shot.play();
 
 					shots[i]._active = true;
 					shots[i].plot((ship._x + ship._width), (ship._y + 2));
@@ -156,7 +155,12 @@
 
 	};
 
-	function main() {
+	main = new DGE.Interval(function() {
+
+		// Move the stars (doing it in one place gets better performance)
+		for (var i = 0; i < NUM_STARS; i++) {
+			stars[i].exec();
+		}
 
 		// Create a new enemy?
 		// Always create one if there aren't any, otherwise a 1% chance.
@@ -166,7 +170,7 @@
 
 			new DGE.Sprite({
 				angle : 0,
-				image : 'ufo_ds.gif',
+				image : 'gfx/ufo_ds.gif',
 				group : GROUP_UFOS,
 				move : DGE.Sprite.move.angle,
 				ping : function() {
@@ -185,17 +189,17 @@
 					
 						if (shots[i]._active && this.isTouching(shots[i])) {
 
-							//sfx.ufoDeath.play();
+							sfx.ufoDeath.play();
 
 							score.value += 100;
-							score.text.text(DGE.printf('Score: %s', DGE.formatNumber(score.value)));
+							score.text.text(DGE.sprintf('Score: %s', DGE.formatNumber(score.value)));
 
 							shots[i]._active = false;
 							shots[i].hide();
 
 							numUFOs--;
 							this._active = false;
-							this.image('explode.gif');
+							this.image('gfx/explode.gif');
 							this.remove(600);
 
 							return;
@@ -213,7 +217,7 @@
 				width : 32,
 				height : 32,
 				zIndex : 1
-			});
+			}).start();
 
 		}
 
@@ -241,9 +245,9 @@
 		}
 
 		if (c.isDown(c.RIGHT)) {
-			ship.image('ship_moving.gif');
+			ship.image('gfx/ship_moving.gif');
 		} else {
-			ship.image('ship.gif');
+			ship.image('gfx/ship.gif');
 		}
 
 		if (
@@ -251,10 +255,9 @@
 			|| (ship._y != y)
 		) ship.plot();
 
-	};
+	}, DGE.Interval.formatFPS(30));
 
 	init();
-	DGE.main(main);
-	DGE.start();
+	main.start();
 
 })();
