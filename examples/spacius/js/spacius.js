@@ -63,12 +63,15 @@
 			zIndex : 1
 		});
 
-		ship = new DGE.Sprite({
+		ship = new DGE.Sprite2({
 			image : 'gfx/ship.gif',
 			width : 32,
-			height : 16,
-			zIndex : 1
-		}).start();
+			height : 16
+		});
+
+		ship.on('click', function() {
+			DGE.debug('ship!');
+		});
 
 		for (var i = 0; i < NUM_SHOTS; i++) {
 			shots.push(new DGE.Sprite({
@@ -127,6 +130,7 @@
 
 		numUFOs = 0;
 		score.value = 0;
+
 		score.text.text(DGE.sprintf('Score: %s', DGE.formatNumber(score.value)));
 		ship.center().show();
 		DGE.Sprite.getByGroup(GROUP_UFOS, 'remove');
@@ -143,7 +147,7 @@
 					sfx.shot.play();
 
 					shots[i]._active = true;
-					shots[i].plot((ship._x + ship._width), (ship._y + 2));
+					shots[i].plot((ship.x + ship.width), (ship.y + 2));
 					shots[i].show();
 
 					break;
@@ -223,36 +227,36 @@
 
 		// Move the ship
 		var c = DGE.controls;
-		var x = ship._x;
-		var y = ship._y;
+		var x = ship.x;
+		var y = ship.y;
 
 		if (c.isDown(c.UP)) {
-			ship._y -= SPEED_SHIP;
-			if (ship._y <= 0) ship._y = 0;
+			ship.y -= SPEED_SHIP;
+			if (ship.y <= 0) ship.y = 0;
 		} else if (c.isDown(c.DOWN)) {
-			ship._y += SPEED_SHIP;
-			if (ship._y >= (DGE.STAGE_HEIGHT - ship._height)) ship._y = (DGE.STAGE_HEIGHT - ship._height);
+			ship.y += SPEED_SHIP;
+			if (ship.y >= (DGE.STAGE_HEIGHT - ship.height)) ship.y = (DGE.STAGE_HEIGHT - ship.height);
 			ship.plot();
 		}
 
 		if (c.isDown(c.LEFT)) {
-			ship._x -= SPEED_SHIP;
-			if (ship._x <= 0) ship._x = 0;
+			ship.x -= SPEED_SHIP;
+			if (ship.x <= 0) ship.x = 0;
 			ship.plot();
 		} else if (c.isDown(c.RIGHT)) {
-			ship._x += SPEED_SHIP;
-			if (ship._x >= (DGE.STAGE_WIDTH - ship._width)) ship._x = (DGE.STAGE_WIDTH - ship._width);
+			ship.x += SPEED_SHIP;
+			if (ship.x >= (DGE.STAGE_WIDTH - ship.width)) ship.x = (DGE.STAGE_WIDTH - ship.width);
 		}
 
 		if (c.isDown(c.RIGHT)) {
-			ship.image('gfx/ship_moving.gif');
+			ship.set('image', 'gfx/ship_moving.gif');
 		} else {
-			ship.image('gfx/ship.gif');
+			ship.set('image', 'gfx/ship.gif');
 		}
 
 		if (
-			(ship._x != x)
-			|| (ship._y != y)
+			(ship.x != x)
+			|| (ship.y != y)
 		) ship.plot();
 
 	}, DGE.Interval.formatFPS(30));
