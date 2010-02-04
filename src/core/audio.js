@@ -15,7 +15,7 @@ DGE.Audio = DGE.Object.make(function(conf) {
 		this.node = document.createElement('audio');
 
 		if (this.node) {
-			DGE.stage._node.appendChild(this.node);
+			DGE.stage.node.appendChild(this.node);
 		}
 
 	}

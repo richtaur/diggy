@@ -57,7 +57,6 @@ files = [
 			var img = new Image();
 			img.onload = increment;
 			img.src = files[i];
-if (DGE.conf.baseURL) DGE.debug("if you don't see any images it's probably because DGE.conf.baseURL is being deprecated (TODO)");
 
 			img.onerror = function(e) {
 				if (callbacks.error) callbacks.error(e);

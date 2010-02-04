@@ -25,7 +25,6 @@ new DGE.Interval({
 	currentInterval : 1,
 	scope : scope
 });
-make sure delay doesn't stay because delay means something else
 
 */
 DGE.Interval = function(fn, delay, scope) {

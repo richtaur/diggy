@@ -1,94 +1,101 @@
-// TODO: Scenes? Think about transitions. Do layers even make sense?
-/* TODO: think about how I was using DGE.layers before, like doing this.stats and this.movesText
-that's some ugliness, because Sprite is already such a packed Object. If you did your own this.add (for a sprite)
-you'd overwrite an important method. Perhaps .children or something?
-*/
-
-// TODO - replace el.style calls to use DGE.css() instead (might not be a good idea, for performance's sake)
-// TODO- take out constants like SPRITE_WIDTH and put them where they belong, on DGE.Sprite
-// TODO - additionally, will need a .conf to work for anything like that to set the defaults elegantly ... right?
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
  * http://diggy.sistertrain.com/
  * @namespace
  * @module Diggy
  */
-var DGE = (function() {
 
+// TODO: Scenes? Think about transitions. Do layers even make sense?
+/* TODO: think about how I was using DGE.layers before, like doing this.stats and this.movesText
+that's some ugliness, because Sprite is already such a packed Object. If you did your own this.add (for a sprite)
+you'd overwrite an important method. Perhaps .children or something? (yes. just audit this)
+*/
+// TODO: get rid of DISPLAY_WIDTH and STAGE_WIDTH, etc.
+
+/**
+ * DGE is the single global utilizied by Diggy.
+ * It contains all of Diggy's classes, properties and methods.
+ * @namespace
+ * @class DGE
+ */
+var DGE = {
 	/**
-	 * Shortcut to set a Diggy configuration setting.
-	 * @param {String} attr The attribute to set.
-	 * @param {Object} value The value to apply to the setting.
-	 * @return {Object} DGE (for chaining).
-	 * @method set
-	 * @static
+	 * What version of the Diggy library this is.
+	 * @final
+	 * @property version
+	 * @type Object
 	 */
-	var set = function(attr, value) {
+	version : {
+		/**
+		 * The name of the version of Diggy.
+		 * @final
+		 * @property version.name
+		 * @type String
+		 */
+		name : 'alpha 0',
+		/**
+		 * The version of Diggy represented as an integer.
+		 * @final
+		 * @property version.number
+		 * @type Number
+		 */
+		number : 0
+	}
+};
 
-		if (typeof(attr) == 'object') {
-			for (var i in attr) {
-				arguments.callee.apply(DGE, [i, attr[i]]);
-			}
-			return DGE;
-		}
+/**
+ * The platform Object contains information on the platform Diggy is running on.
+ * @final
+ * @property platform
+ * @type Object
+ */
+DGE.platform = {};
 
-		switch (attr) {
+/**
+ * The constant for any web browser.
+ * @final
+ * @property platform.BROWSER
+ * @type String
+ */
+DGE.platform.BROWSER = 'browser';
 
-			case 'baseURL':
-				DGE.conf.baseURL = value;
-				break;
+/**
+ * The constant for the Titanium platform.
+ * @final
+ * @property platform.TITANIUM
+ * @type String
+ */
+DGE.platform.TITANIUM = 'titanium';
 
-			case 'libsURL':
-				DGE.conf.libsURL = value;
-				break;
+/**
+ * A string representing the platform DGE is running on.
+ * @final
+ * @property platform.name
+ * @type String
+ */
+DGE.platform.name = (function() {
 
-			case 'stage':
-				DGE.stage = new DGE.Sprite({
-					addTo : false,
-					id : value.id,
-					width : value.width,
-					height : value.height
-				}).setCSS({
-					background : (value.background || '#000'),
-					overflow : 'hidden',
-					position : 'relative'
-				});
+	var platform = DGE.platform.BROWSER;
 
-				DGE.STAGE_WIDTH = value.width;
-				DGE.STAGE_HEIGHT = value.height;
-
-				DGE.stage;
-				break;
-
-			default:
-				throw new Error(DGE.sprintf('Unknown setting "%s"', attr));
-				break;
-
-		}
-
-		return DGE;
-
+	if (typeof(Titanium) == 'object') {
+		platform = DGE.platform.TITANIUM;
 	}
 
-	return {
-
-		/**
-		 * Initializes DGE.
-		 * @param {Object} The key/value pair of configuration settings.
-		 * @method init
-		 * @static
-		 */
-		init : function(conf) {
-
-			if (conf) set(conf);
-
-		},
-
-		set : set,
-
-	};
+	return platform;
 
 })();
+
+/**
+ * Initializes DGE.
+ * @param {Object} The key/value pair of configuration settings.
+ * @return {Object} DGE.stage, the primary stage object as a DGE.Sprite instance.
+ * @method init
+ * @static
+ */
+DGE.init = function(conf) {
+	DGE.stage = new DGE.Sprite(conf);
+	return DGE.stage;
+};
 
 /**
  * Creates a custom attribute method.
@@ -115,36 +122,11 @@ DGE.attrMethod = function(that, change) {
 };
 
 /**
-// TODO: maybe move this to a setCSS lambda. it might just be cluttering up the API
- * Converts dash-separation to camelCase.
- * @param {String} text The string to convert.
- * @return {String} The converted string.
- * @method dashToCamelCase
+ * Sends a log message to the platform running Diggy. All parameters are passed through.
+ * @method log
  * @static
  */
-DGE.dashToCamelCase = function(text) {
-
-	var camelCase = '';
-
-	for (var i = 0; i < text.length; i++) {
-		if (text[i] == '-') {
-			camelCase += text[i + 1].toUpperCase();
-			i++;
-		} else {
-			camelCase += text[i];
-		}
-	}
-
-	return camelCase;
-
-};
-
-/**
- * Sends a debug message to the platform running Diggy. All parameters are passed through.
- * @method debug
- * @static
- */
-DGE.debug = function(msg) {
+DGE.log = function() {
 
 	switch (DGE.platform.name) {
 		case DGE.platform.BROWSER:
@@ -336,32 +318,53 @@ DGE.rand = function(from, to) {
  * @method setCSS
  * @static
  */
-DGE.setCSS = function(el, style, value) {
+DGE.setCSS = (function() {
 
-	if (typeof(style) == 'object') {
+	function dashToCamelCase(text) {
 
-		for (var k in style) {
-			arguments.callee(el, k, style[k]);
+		var camelCase = '';
+
+		for (var i = 0; i < text.length; i++) {
+			if (text[i] == '-') {
+				i++;
+				camelCase += text[i].toUpperCase();
+			} else {
+				camelCase += text[i];
+			}
 		}
 
-	}
+		return camelCase;
 
-	// Handle cross-platform issues here
-	switch (style) {
-		case 'float':
-			el.style.cssFloat = value;
-			el.style.styleFloat = value;
-			return el;
-		case 'opacity':
-			el.style.filter = DGE.sprintf('alpha(opacity=%s)', (value * 100));
-			el.style.opacity = value;
-			return el;
-	}
+	};
 
-	style = DGE.dashToCamelCase(style);
-	el.style[style] = value;
+	return function(el, style, value) {
 
-};
+		if (typeof(style) == 'object') {
+
+			for (var k in style) {
+				arguments.callee(el, k, style[k]);
+			}
+
+		}
+
+		// Handle cross-platform issues here
+		switch (style) {
+			case 'float':
+				el.style.cssFloat = value;
+				el.style.styleFloat = value;
+				return el;
+			case 'opacity':
+				el.style.filter = DGE.sprintf('alpha(opacity=%s)', (value * 100));
+				el.style.opacity = value;
+				return el;
+		}
+
+		style = dashToCamelCase(style);
+		el.style[style] = value;
+
+	};
+
+})();
 
 /**
  * Sort of emulates the sprintf() function in C (replaces %s with the next argument).

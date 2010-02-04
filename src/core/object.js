@@ -2,7 +2,7 @@
 
 function makeObject(fn, defaultSet, defaultEvents) {
 
-	fn = (fn || function(){});
+	fn = (fn || function() {});
 	defaultSet = (defaultSet || {});
 	defaultEvents = (defaultEvents || {});
 
@@ -10,8 +10,13 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		this.id = id;
 	};
 
+	// TODO: make sure this works, hasn't been tested
+	defaultEvents['set:parent'] = function(obj) {
+		obj.add(this);
+	};
+
 	/**
-	 * A core object class to extend for use in other meanginful ways.
+	 * A core object class to extend for use in other meangingful ways.
 	 * @namespace DGE
 	 * @class Object
 	 */
@@ -31,6 +36,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 
 		if (conf.id === undefined) conf.id = DGE.makeId();
 
+		Obj.children[conf.id] = this;
 		this.children = (this.children || {});
 		this.data = (this.data || {});
 		this.events = (this.events || {});
@@ -134,7 +140,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 			var previous = this.data[key];
 			this.data[key] = value;
 
-			if (value != previous) {
+			if (value !== previous) {
 				this.fire(DGE.sprintf('change:%s', key), value);
 			}
 
@@ -175,11 +181,24 @@ function makeObject(fn, defaultSet, defaultEvents) {
 
 	/**
 	 * Removes this object from memory.
+	 * @param {Number} delay (optional) The number of ms to wait before removing.
 	 * @method remove
 	 */
-	Obj.prototype.remove = function() {
-		Obj.fire('remove');
-		Obj.removeById(this.id);
+	Obj.prototype.remove = function(delay) {
+
+		var that = this;
+
+		function remove() {
+			that.fire('remove');
+			Obj.removeById(that.id);
+		};
+
+		if (delay) {
+			setTimeout(remove, delay);
+		} else {
+			remove();
+		}
+
 	};
 
 	/**
@@ -199,6 +218,40 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	Obj.defaults = defaultSet;
 
 	/**
+	 * Extends this object.
+	 * @param {Function} F The object to extend with.
+	 * @return {Function} F, having extended Obj.
+	 * @method extend
+	 * @static
+	 */
+	Obj.extend = function(F, defaultSetNew, defaultEventsNew) {
+
+		var defaultSetExtended = {};
+		var defaultEventsExtended = {};
+
+		F.prototype = new Obj();
+
+		for (var k in defaultSet) {
+			defaultSetExtended[k] = defaultSet[k];
+		}
+
+		for (var k in defaultSetNew) {
+			defaultSetExtended[k] = defaultSetNew[k];
+		}
+
+		for (var k in defaultEvents) {
+			defaultEventsExtended[k] = defaultEvents[k];
+		}
+
+		for (var k in defaultEventsNew) {
+			defaultEventsExtended[k] = defaultEventsNew[k];
+		}
+
+		return makeObject(F, defaultSetExtended, defaultEventsExtended);
+
+	};
+
+	/**
 	 * Gets an object by its id.
 	 * @param {String} id The id of the object to get.
 	 * @return {Object || null} The object if it exists or null on failure.
@@ -207,6 +260,34 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	 */
 	Obj.getById = function(id) {
 		return Obj.children[id];
+	};
+
+	/**
+	 * Creates multiple new objects at once, by id.
+	 * @param {Object} keys An object with keys as ids and the value as additional confs to pass.
+	 * @param {Object} conf (optional) A key/value pair of values to set.
+	 * @return {Object} The created objects, with their id's as keys.
+	 * @method makeMultiple
+	 * @static
+	 */
+	Obj.makeMultiple = function(keys, conf) {
+
+		var objects = {};
+
+		for (var id in objects) {
+
+			for (var k in conf) {
+				objects.id = id;
+				if (objects[k] === undefined) objects[k] = conf[k];
+			}
+
+			var obj = new Obj(objects[k]);
+			objects[obj.id] = obj;
+
+		}
+
+		return objects;
+		
 	};
 
 	/**
@@ -225,7 +306,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		}
 
 		// Remove from parent
-		delete obj.parent.children[this.id];
+		if (obj.parent) delete obj.parent.children[this.id];
 
 	};
 
