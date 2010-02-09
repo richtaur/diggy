@@ -1,6 +1,6 @@
 /**
  * The DGE.Audio Object manages audio in your gameomg!
- * @param {Object} conf The configuration settings for this new Sprite object.
+ * @param {Object} conf The configuration settings for this new Audio object.
  * @namespace DGE
  * @class Audio
  * @constructor
@@ -38,10 +38,10 @@ DGE.Audio = DGE.Object.make(function(conf) {
 	'change:mute' : function(mute) {
 
 		if (DGE.platform.name == DGE.platform.TITANIUM) {
-			if (mute) {
-				this.node.setVolume(0);
-			} else {
+			if (mute === false) {
 				this.node.setVolume(this.get('volume'));
+			} else {
+				this.node.setVolume(0);
 			}
 		} else {
 			this.node.muted = mute;
@@ -49,6 +49,11 @@ DGE.Audio = DGE.Object.make(function(conf) {
 
 	},
 	'change:volume' : function(volume) {
+
+		// This line is necessary because of the crappy way Titanium implements sound objects.
+		// The node might not exist yet because you must create it with a file defined,
+		// and the file might not have been set yet.
+		if (!this.node) return;
 
 		if (DGE.platform.name == DGE.platform.TITANIUM) {
 			this.node.setVolume(volume / 100);
@@ -60,7 +65,7 @@ DGE.Audio = DGE.Object.make(function(conf) {
 });
 
 /**
- * Mutes the audio playback.
+ * Mutes the audio.
  * @param {Boolean} mute true to mute the audio, false to disable mute.
  * @return {Object} this (for chaining).
  * @method mute
@@ -70,7 +75,7 @@ DGE.Audio.prototype.mute = function(mute) {
 };
 
 /**
- * Pauses the audio playback.
+ * Pauses the audio.
  * @return {Object} this (for chaining).
  * @method pause
  */

@@ -10,7 +10,6 @@
 that's some ugliness, because Sprite is already such a packed Object. If you did your own this.add (for a sprite)
 you'd overwrite an important method. Perhaps .children or something? (yes. just audit this)
 */
-// TODO: get rid of DISPLAY_WIDTH and STAGE_WIDTH, etc.
 
 /**
  * DGE is the single global utilizied by Diggy.
@@ -172,6 +171,7 @@ DGE.exec = function(fn, ms, scope) {
  * @method execScript
  * @static
  */
+// TODO audit, might not need anymore since not using SM2
 DGE.execScript = function(src) {
 	var script = document.createElement('script');
 	script.src = (DGE.conf.libsURL + src);
@@ -356,6 +356,11 @@ DGE.setCSS = (function() {
 			case 'opacity':
 				el.style.filter = DGE.sprintf('alpha(opacity=%s)', (value * 100));
 				el.style.opacity = value;
+				return el;
+			case 'rotation':
+				// BUG: this doesn't work in Firefox. Setting via Firefox works ...
+				el.style['-moz-transform'] = DGE.sprintf('rotate(%s)', value);
+				el.style['-webkit-transform'] = DGE.sprintf('rotate(%s)', value);
 				return el;
 		}
 

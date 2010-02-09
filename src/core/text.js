@@ -5,9 +5,13 @@
  * <ol>
  *  <li>var text = new DGE.Text(conf);</li>
  *	<li></li>
- *	<li>text.color('orange')</li>
- *  <li>&nbsp;&nbsp;.text('Are those my birds? I need those.');</li>
+ *	<li>text.set('color', 'orange')</li>
+ *  <li>&nbsp;&nbsp;.set('text', 'Are those my birds? I need those.');</li>
  * </ol>
+ * <br>
+ * <p>
+ * Supported values to set include: color, font, shadow, size, text.
+ * </p>
 
  * @param {Object} conf The default configuration stuff.
  * @namespace DGE

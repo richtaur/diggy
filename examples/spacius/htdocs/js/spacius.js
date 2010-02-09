@@ -11,7 +11,7 @@
 	var main;
 	var music;
 	var numUFOs;
-	var score = {};
+	var score;
 	var sfx;
 	var ship;
 	var shots = [];
@@ -50,7 +50,7 @@
 			'gfx/ufo_ds.gif'
 		]);
 
-		score.text = new DGE.Text({
+		score = new DGE.Text({
 			color : '#FFF',
 			font : 'verdana',
 			size : 10,
@@ -69,6 +69,10 @@
 			z : 2
 		});
 
+		ship.on('click', function() {
+			makeShot();
+		});
+
 		for (var i = 0; i < NUM_SHOTS; i++) {
 			shots.push(new DGE.Sprite({
 				angle : 180,
@@ -78,8 +82,7 @@
 				height : 8
 			}).hide().on('ping', function() {
 				if (this.isOutOfBounds(true)) {
-					this.hide();
-					this.stop();
+					this.hide().stop();
 				}
 			}));
 		}
@@ -100,21 +103,21 @@
 		}
 
 		var music = new DGE.Audio({
-			file : 'audio/theme.mp3',
+			file : 'audio/theme.ogg',
 			loop : true
 		});
 
 		sfx = {
 			shot : new DGE.Audio({
-				file : 'audio/shot.mp3'
+				file : 'audio/shot.ogg'
 			}),
 			ufoDeath : new DGE.Audio({
-				file : 'audio/ufo_die.mp3'
+				file : 'audio/ufo_die.ogg'
 			})
 		};
 
 		DGE.controls.down(keyDown);
-		music.play();
+		//music.play();
 		newGame();
 
 	};
@@ -122,9 +125,9 @@
 	function newGame() {
 
 		numUFOs = 0;
-		score.value = 0;
+		score.set('points', 0);
 
-		score.text.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.value)));
+		score.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.get('points'))));
 		ship.center().show();
 		//DGE.Sprite.getByGroup(GROUP_UFOS, 'remove');
 
@@ -134,21 +137,27 @@
 
 		if (keyCode == DGE.controls.SPACE) {
 
-			for (var i = 0; i < NUM_SHOTS; i++) {
-				if (!shots[i].get('active')) {
+			makeShot();
 
-					sfx.shot.play();
+		}
 
-					shots[i].plot((ship.x + ship.width), (ship.y + 2));
-					shots[i].set('moving', true);
-					shots[i].show();
-					shots[i].start();
+	};
 
-					break;
+	function makeShot() {
 
-				}
+		for (var i = 0; i < NUM_SHOTS; i++) {
+			if (!shots[i].get('active')) {
+
+				sfx.shot.play();
+
+				shots[i].plot((ship.x + ship.width), (ship.y + 2));
+				shots[i].set('moving', true);
+				shots[i].show();
+				shots[i].start();
+
+				break;
+
 			}
-
 		}
 
 	};
@@ -195,11 +204,10 @@
 
 							sfx.ufoDeath.play();
 
-							score.value += 100;
-							score.text.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.value)));
+							score.set('points', (score.get('points') + 100));
+							score.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.get('points'))));
 
-							shots[i].hide();
-							shots[i].stop();
+							shots[i].hide().stop();
 
 							numUFOs--;
 							this.stop();

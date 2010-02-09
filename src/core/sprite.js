@@ -4,6 +4,7 @@
  * @namespace DGE
  * @class Sprite
  * @constructor
+ * @extends DGE.Object
  */
 DGE.Sprite = DGE.Object.make(function(conf) {
 	this.initSprite(conf);
@@ -35,6 +36,9 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	},
 	'change:opacity' : function(opacity) {
 		this.setCSS('opacity', opacity);
+	},
+	'change:rotation' : function(angle) {
+		this.setCSS('rotation', DGE.sprintf('%sdeg', angle));
 	},
 	'change:visible' : function(visible) {
 		this.setCSS('display', (visible ? '' : 'none'));

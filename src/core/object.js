@@ -220,7 +220,9 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	/**
 	 * Extends this object.
 	 * @param {Function} F The object to extend with.
-	 * @return {Function} F, having extended Obj.
+	 * @param {Object} defaultSetNew The default key/values to set.
+	 * @param {Object} defaultEventsNew The default key/values to listen for.
+	 * @return {Function} The new, extended object.
 	 * @method extend
 	 * @static
 	 */
@@ -252,7 +254,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	};
 
 	/**
-	 * Gets an object by its id.
+	 * Gets a child object by its id.
 	 * @param {String} id The id of the object to get.
 	 * @return {Object || null} The object if it exists or null on failure.
 	 * @method getById

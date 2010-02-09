@@ -1,7 +1,7 @@
 // TODO: implement this. data needs to be persistent
 // TODO: shouldn't this just be extending DGE.Object?
 /**
- * A extremely simple persistent memory manager.
+ * An extremely simple persistent memory manager.
  * @namespace DGE
  * @class Data
  */
