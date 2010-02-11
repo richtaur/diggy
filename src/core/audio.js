@@ -35,16 +35,16 @@ DGE.Audio = DGE.Object.make(function(conf) {
 		}
 
 	},
-	'change:mute' : function(mute) {
+	'change:mute' : function(muted) {
 
 		if (DGE.platform.name == DGE.platform.TITANIUM) {
-			if (mute === false) {
+			if (muted === false) {
 				this.node.setVolume(this.get('volume'));
 			} else {
 				this.node.setVolume(0);
 			}
 		} else {
-			this.node.muted = mute;
+			this.node.muted = muted;
 		}
 
 	},

@@ -1,4 +1,4 @@
-// TODO: audit whole file, it's gross
+// TODO: REWRITE
 /**
  * Creates a percentage meter.
  * @namespace DGE

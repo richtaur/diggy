@@ -143,42 +143,6 @@ DGE.log = function() {
 };
 
 /**
- * Execute a function immediately.
- * @param {Function} fn The function to call.
- * @param {Number} ms (optional) The number of milliseconds to wait (via setTimeout).
- * @param {Object} scope (optional) The scope within which to call the function.
- * @method execScript
- * @static
- * TODO might not need this anymore if we ditch SM2
- */
-DGE.exec = function(fn, ms, scope) {
-
-	var fire = function() {
-		fn.apply(scope);
-	};
-
-	if (ms) {
-		setTimeout(fire, ms);
-	} else {
-		fire();
-	}
-
-};
-
-/**
- * Executes an external JavaScript file.
- * @param {String} src The URL of the file.
- * @method execScript
- * @static
- */
-// TODO audit, might not need anymore since not using SM2
-DGE.execScript = function(src) {
-	var script = document.createElement('script');
-	script.src = (DGE.conf.libsURL + src);
-	document.getElementsByTagName('head')[0].appendChild(script);
-};
-
-/**
  * Extends an object.
  * @param {Function} P The parent object to extend.
  * @param {Function} F The object to extend with.
@@ -392,7 +356,6 @@ DGE.sprintf = function(str) {
  * Vibrates the platform (if supported, for mobile devices).
  * @method vibrate
  * @static
- * @FINAL
  */
 DGE.vibrate = function() {
 

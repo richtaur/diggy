@@ -1,3 +1,4 @@
+// TODO: REWRITE
 /**
  * Creates a Sprite with a list of Sprites within.
  * @namespace DGE
@@ -13,21 +14,18 @@ DGE.List = DGE.extend(DGE.Sprite, function(conf) {
 
 /**
  * 
- * TODO: audit this
  * @property _rows
  */
 DGE.List.prototype._rows = {};
 
 /**
  * 
- * TODO: audit this
  * @property _rows
  */
 DGE.List.prototype._numRows = 0;
 
 /**
  * 
- * TODO: audit this
  * @property _rowHeight
  */
 DGE.List.prototype._rowHeight = {};

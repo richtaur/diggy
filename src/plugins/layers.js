@@ -1,3 +1,4 @@
+// TODO: REWRITE
 /**
  * Creates an array of Sprites to be used as containers for other Sprites.
  * @namespace DGE
@@ -23,7 +24,6 @@ DGE.layers = (function() {
 
 			var conf = (layers[k].conf || {});
 			conf.id = k;
-			// TODO: audit these, should they be onShow? should they be in conf??
 			conf.onShow = (conf.onShow || layers[k].show);
 			conf.onHide = (conf.onHide || layers[k].hide);
 			conf.width = DGE.STAGE_WIDTH;
@@ -35,11 +35,9 @@ DGE.layers = (function() {
 			objs[k].showOnly = (function(k) {
 				return function() {
 					show(k);
-// TODO: audit
 				};
 			})(k);
 
-// TODO: audit
 			if (layers[k].init !== undefined) {
 				layers[k].init.apply(objs[k]);
 			}

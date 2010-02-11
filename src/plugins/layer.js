@@ -1,3 +1,4 @@
+// TODO: REWRITE
 /**
  * Creates a layer which is essentially a grouped, fullscreen Sprite.
  */

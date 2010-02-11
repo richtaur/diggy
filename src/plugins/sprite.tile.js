@@ -1,5 +1,4 @@
-// not yet --- DOCS DONE
-
+// TODO: REWRITE
 /**
  * A Tile class to provide helper methods when dealing within a tiled environment.
  * @param {Object} conf The configuration settings for this new Tile object.

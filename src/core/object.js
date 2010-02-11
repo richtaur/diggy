@@ -10,7 +10,6 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		this.id = id;
 	};
 
-	// TODO: make sure this works, hasn't been tested
 	defaultEvents['set:parent'] = function(obj) {
 		obj.add(this);
 	};
@@ -30,6 +29,8 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	 */
 	Obj.prototype.init = function(conf) {
 
+		conf = (conf || {});
+
 		for (var k in Obj.defaults) {
 			if (conf[k] === undefined) conf[k] = Obj.defaults[k];
 		}
@@ -41,7 +42,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		this.data = (this.data || {});
 		this.events = (this.events || {});
 
-		this.set(conf);
+		return this.set(conf);
 
 	};
 

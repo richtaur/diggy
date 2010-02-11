@@ -1,64 +1,50 @@
-// TODO: implement this. data needs to be persistent
-// TODO: shouldn't this just be extending DGE.Object?
 /**
  * An extremely simple persistent memory manager.
  * @namespace DGE
  * @class Data
  */
-DGE.Data = (function() {
+DGE.Data = new DGE.Object().init({
+	id : 'DGE.Data'
+});
 
-	var data = {};
+DGE.Data.get = function(key) {
+	return localStorage[key];
+};
 
-	/**
-	 * Empties the data.
-	 * @method empty
-	 * @final
-	 * @public
-	 * @static
-	 */
-	function empty() {
-		data = {};
-	};
+DGE.Data.set = function(key, value) {
 
-	/**
-	 * Gets the data assigned to a given key.
-	 * @param {String} key The key of the data to fetch.
-	 * @return {Object} The data associated with the passed key.
-	 * @method get
-	 * @final
-	 * @public
-	 * @static
-	 */
-	function get(key) {
-		return data[key];
-	};
+	if (typeof(key) == 'object') {
 
-	/**
-	 * Sets the data assigned to a given key.
-	 * @param {String} key The key of the data to set.
-	 * @param {Object} value The value to set.
-	 * @method set
-	 * @final
-	 * @public
-	 * @static
-	 */
-	function set(key, value) {
-
-		if (typeof(key) == 'object') {
-			for (var k in key) {
-				arguments.callee(k, key[k]);
-			}
-			return;
+		for (var k in key) {
+			arguments.callee.apply(DGE.Data, [k, key[k]]);
 		}
 
-		data[key] = value;
+	} else {
 
-	};
+		var previous = DGE.Data.data[key];
+		this.data[key] = value;
+		localStorage[key] = value;
 
-	return {
-		empty : empty,
-		get : get,
-		set : set
-	};
+		if (value !== previous) {
+			DGE.Data.fire(DGE.sprintf('change:%s', key), value);
+		}
 
-})();
+		DGE.Data.fire(DGE.sprintf('set:%s', key), value);
+
+	}
+
+};
+
+/**
+ * Empties the persistent memory.
+ * @return {Object} this (for chaining).
+ * @method add
+ */
+DGE.Data.empty = function() {
+
+	DGE.Data.data = {};
+	localStorage = {};
+
+	return DGE.Data;
+
+};

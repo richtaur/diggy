@@ -26,7 +26,7 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		this.setCSS('cursor', cursor);
 	},
 	'change:delay' : function(delay) {
-		this.interval.setDelay(delay);
+		this.interval.set('delay', delay);
 	},
 	'change:image' : function(url) {
 		this.setCSS(
@@ -131,13 +131,16 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 
 	var that = this;
 
-	this.interval = new DGE.Interval(function() {
+	this.interval = new DGE.Interval({
+		delay : conf.delay,
+		interval : function() {
 
-		if (that.get('moving')) that.move();
+			if (that.get('moving')) that.move();
+			that.fire('ping');
 
-		that.fire('ping');
-
-	}, conf.delay, this);
+		},
+		scope : this
+	});
 
 	return this.init(conf);
 

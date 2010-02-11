@@ -16,103 +16,56 @@
  * @class Interval
  * @constructor
  */
-/* TODO:
-
-new DGE.Interval({
-	fn : function(){},
-	ms : 100,
-	numIntervals : 5,
-	currentInterval : 1,
-	scope : scope
+DGE.Interval = DGE.Object.make(function(conf) {
+	this.init(conf);
+}, {
+	active : false,
+	delay : 67, // ~30 FPS
+	interval : function() {},
+	scope : null
+}, {
+	'change:delay' : function() {
+		this.stop();
+		this.start();
+	},
+	'change:interval' : function() {
+		this.stop();
+		this.start();
+	}
 });
 
-*/
-DGE.Interval = function(fn, delay, scope) {
+/**
+ * Starts (or restarts) the interval.
+ * @return {Object} this (for chaining).
+ * @method start
+ */
+DGE.Interval.prototype.start = function() {
 
-	var handle = null;
+	this.stop().set('active', true);
 
-	if (delay === undefined) delay = DGE.Interval.defaults.delay;
-
-	/**
-	 * Sets the interval frequency.
-	 * @param {Number} newDelay The milliseconds between calls to fn.
-	 * @return {Object} this (for chaining).
-	 * @method setDelay
-	 */
-	this.setDelay = function(newDelay) {
-
-		if (delay == newDelay) return;
-
-		delay = newDelay;
-		if (handle) this.start();
-
-		return this;
-
+	var interval = this.get('interval');
+	var that = (this.get('scope') || this);
+	var fn = function() {
+		interval.apply(that);
 	};
 
-	/**
-	 * Starts (or restarts) the interval.
-	 * @return {Object} this (for chaining).
-	 * @method start
-	 */
-	this.start = function() {
-
-		var that = (scope || this);
-
-		this.stop();
-
-		handle = setInterval(function() {
-			fn.apply(that);
-		}, delay);
-
-		this._active = true;
-
-		return this;
-
-	};
-
-	/**
-	 * Stops the interval if it's active.
-	 * @return {Object} this (for chaining).
-	 * @method stop
-	 */
-	this.stop = function() {
-
-		if (handle) {
-			clearInterval(handle);
-			handle = null;
-		}
-
-		this._active = false;
-
-		return;
-
-	};
+	return this.set('intervalID', setInterval(fn, this.get('delay')));
 
 };
 
 /**
- * Read-only: true if the interval is active, false if it isn't.
- * @property _active
- * @default false
- * @final
- * @static
- * @type Number
+ * Stops the interval if it's active.
+ * @return {Object} this (for chaining).
+ * @method stop
  */
-DGE.Interval.prototype._active = false;
+DGE.Interval.prototype.stop = function() {
 
-/**
- * An object comprised of the DGE.Interval defaults, including:
- * <ul>
- *	<li>{Number} delay The delay to use for a new DGE.Interval object if one isn't given. (default: 10)</li>
- * </ul>
- * @property defaults
- * @default Object
- * @static
- * @type Object
- */
-DGE.Interval.defaults = {
-	delay : 10
+	var intervalID = this.get('intervalID');
+	if (intervalID) clearInterval(intervalID);
+	this.set('intervalID', null);
+
+	return this.set('active', false);
+
 };
 
 /**
@@ -125,5 +78,3 @@ DGE.Interval.defaults = {
 DGE.Interval.formatFPS = function(fps) {
 	return Math.ceil(1000 / fps);
 };
-
-// TODO: DGE.stop and DGE.start: should those be DGE.Interval.stopAll(); DGE.Interval.startAll(); // ?
