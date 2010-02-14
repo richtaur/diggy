@@ -1,3 +1,4 @@
+// TODO: set('textAlign', 'center')
 /**
  * Extends DGE.Sprite with features helpful for rendering text.
 
@@ -22,6 +23,7 @@
 DGE.Text = DGE.Sprite.extend(function(conf) {
   this.initSprite(conf);
 }, {
+	autoAdjust : false,
 	color : '#FFF',
 	font : 'Sans-Serif',
 	size : 10
@@ -40,5 +42,27 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 	},
 	'change:text' : function(text) {
 		this.node.innerHTML = text;
+		if (this.get('autoAdjust')) this.adjust();
 	}
 });
+
+/**
+ * Adjusts the width and height of the Text based on its contents.
+ * @return {Object} this (for chaining).
+ * @method adjust
+ */
+DGE.Text.prototype.adjust = function() {
+
+	this.node.style.width = 'auto';
+	this.node.style.height = 'auto';
+
+// TODO: make sure adjusting works (i don't think its' working vertically ATM)
+DGE.log('adjusting...', this.node.innerHTML);
+DGE.log(this.node.offsetWidth, this.node.offsetHeight);
+
+	this.set('width', this.node.offsetWidth);
+	this.set('height', this.node.offsetHeight);
+
+	return this;
+
+};

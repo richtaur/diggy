@@ -31,14 +31,14 @@ var DGE = {
 		 * @property version.name
 		 * @type String
 		 */
-		name : 'alpha 0',
+		name : 'alpha 0.1',
 		/**
 		 * The version of Diggy represented as an integer.
 		 * @final
 		 * @property version.number
 		 * @type Number
 		 */
-		number : 0
+		number : 0.1
 	}
 };
 
@@ -219,6 +219,16 @@ DGE.getNode = function(el) {
 	} else {
 		return document.getElementById(el);
 	}
+};
+
+/**
+ * Gets the current UNIX timestamp.
+ * @return {Number} The timestamp.
+ * @method getTimestamp
+ * @static
+ */
+DGE.getTimestamp = function() {
+	return Math.round((new Date()).getTime() / 1000);
 };
 
 /**

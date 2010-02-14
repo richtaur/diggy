@@ -1,17 +1,4 @@
 /**
-TODO: what should this file be called?
-input.keyboard.js?
-what will mouse be called?
-input.mouse.js?
-input.controller.js?
-does it make sense to combine them?
-
-also this should be using the same format as whatever
-DGE uses, so like maybe:
-DGE.controls.on('keyDown', keyDownFn);
- */
-
-/**
  * Keyboard control utility.
  * @namespace DGE
  * @class Keyboard

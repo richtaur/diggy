@@ -123,8 +123,9 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	/**
 	 * Sets a stored value.
 	 * @param {String} key The key of the value to set.
-	 * @param {String} key The value of the key to set.
+	 * @param {String} value The value to set.
 	 * @return {Object} this (for chaining).
+	 * @method set
 	 */
 	Obj.prototype.set = function(key, value) {
 
@@ -151,6 +152,17 @@ function makeObject(fn, defaultSet, defaultEvents) {
 
 		return this;
 
+	};
+
+	/**
+	 * Offsets a stored value.
+	 * @param {String} key The key whose value to offset.
+	 * @param {String} offset The amount to offset the value.
+	 * @return {Object} this (for chaining).
+	 * @method offset
+	 */
+	Obj.prototype.offset = function(key, offset) {
+		return this.set(key, (this.get(key) + offset));
 	};
 
 	/**

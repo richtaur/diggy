@@ -12,6 +12,8 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	active : false,
 	angle : 0,
 	delay : DGE.Interval.formatFPS(30),
+// TODO: examine API, is this the ONLY place we use 0-1 instead of 0-100? (see: audio volume)
+	opacity : 1,
 	velocity : 0,
 	visible : true,
 	width : 16,
@@ -36,6 +38,9 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	},
 	'change:opacity' : function(opacity) {
 		this.setCSS('opacity', opacity);
+	},
+	'change:parent' : function(obj) {
+		obj.node.appendChild(this.node);
 	},
 	'change:rotation' : function(angle) {
 		this.setCSS('rotation', DGE.sprintf('%sdeg', angle));
@@ -147,10 +152,53 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 };
 
 /**
+ * Gets or sets the angle used to travel from this Sprite to another.
+ * @param {Object} target The target Sprite.
+ * @param {Boolean} setNow true to set the angle immediately (then returns this instead of angle).
+ * @return {Number | Object} The angle or this for chaining.
+ * @method angleTo
+ */
+DGE.Sprite.prototype.anchorToStage = function() {
+
+	var p = this.parent;
+	var x = this.x;
+	var y = this.y;
+
+	while (p) {
+		x += p.x;
+		y += p.y;
+		p = p.parent;
+	}
+
+	this.plot(x, y);
+
+	return this.set('parent', DGE.stage);
+
+};
+
+/**
+ * Gets or sets the angle used to travel from this Sprite to another.
+ * @param {Object} target The target Sprite.
+ * @param {Boolean} setNow true to set the angle immediately (then returns this instead of angle).
+ * @return {Number | Object} The angle or this for chaining.
+ * @method angleTo
+ */
+DGE.Sprite.prototype.angleTo = function(target, setNow) {
+
+  var x = (this.x - target.x);
+  var y = (this.y - target.y);
+  var angle = Math.atan2(y, x);
+  angle = ((angle * 180) / Math.PI);
+
+	return (setNow ? this.set('angle', angle) : angle);
+
+};
+
+/**
  * Centers this Sprite within its parent.
  * @param {String} which undefined to center both X and Y, or 'x' or 'y' separately.
  * @return {Object} this (for chaining).
- * @method centerXY
+ * @method center
  */
 DGE.Sprite.prototype.center = function(which) {
 
@@ -179,6 +227,38 @@ DGE.Sprite.prototype.center = function(which) {
 };
 
 /**
+ * Centers this Sprite based on another Sprite.
+ * @param {Object} target The target Sprite object to center on.
+ * @return {Object} this (for chaining).
+ * @method centerOn
+ */
+DGE.Sprite.prototype.centerOn = function(target) {
+
+	var x = target.x;
+	var y = target.y;
+
+	// This Sprite's offset
+	x -= (this.width / 2);
+	y -= (this.height / 2);
+
+	// Target Sprite's offset
+	x += (target.width / 2);
+	y += (target.height / 2);
+
+	// Check parent's offset
+	/*
+	TODO
+	if (target.node.parentNode !== this._node.parentNode) {
+		x += target._node.parentNode.offsetLeft;
+		y += target._node.parentNode.offsetTop;
+	}
+	*/
+
+	return this.plot(x, y);
+
+};
+
+/**
  * Fill the Sprite with the passed color.
  * @param {String} color A CSS-valid color (hexcode, etc.).
  * @param {Boolean} fillAll true to fill the entire Sprite, overriding any image set.
@@ -194,7 +274,30 @@ DGE.Sprite.prototype.fill = function(color, fillAll) {
 };
 
 /**
- * Check if a Sprite is out of the viewport.
+ * Checks if a Sprite is at the passed coordinates.
+ * @param {Object} mixed You can pass in either (x, y) or ({x : x, y : y}).
+ * @return {Boolean} true if the Sprite has any regions outside of the stage's bounds.
+ * @method isOutOfBounds
+ */
+DGE.Sprite.prototype.isAt = function() {
+
+	if (typeof(arguments[0]) == 'number') {
+		var x = arguments[0];
+		var y = arguments[1];
+	} else {
+		var x = arguments[0].x;
+		var y = arguments[0].y;
+	}
+
+	return (
+		(this.x == x)
+		&& (this.y == y)
+	);
+
+};
+
+/**
+ * Checks if a Sprite is out of the viewport.
  * @param {Boolean} entirely When set to true, will check if the Sprite is entirely out of bounds. False just checks if any part is out instead of the entire region.
  * @return {Boolean} true if the Sprite has any regions outside of the stage's bounds.
  * @method isOutOfBounds
@@ -309,11 +412,11 @@ DGE.Sprite.prototype.plot = function() {
 
 	}
 
-	return this.setCSS({
-		left : (this.x + 'px'),
-		top : (this.y + 'px'),
-		'z-index' : this.z
-	});
+	this.set('x', this.x);
+	this.set('y', this.y);
+	this.set('z', this.z);
+
+	return this;
 
 };
 

@@ -1,6 +1,6 @@
 // TODO: REWRITE
 /**
- * Creates a layer which is essentially a grouped, fullscreen Sprite.
+ * Creates a layer which is essentially a fullscreen Sprite.
  */
 DGE.Layer = DGE.extend(DGE.Sprite, function(conf) {
 

@@ -3,11 +3,18 @@
 
  * <h3>Example usage:<h3>
  * <ol>
- *	<li>var interval = new DGE.Interval(function() {</li>
- *	<li>&nbsp;&nbsp;// do something interesting</li>
- *	<li>}, 100);</li>
+ *	<li>var interval = new DGE.Interval({</li>
+ *  <li>	delay : 100,</li>
+ *  <li>	interval : function,</li>
+ *  <li>		DGE.log('interval!');</li>
+ *  <li>	}</li>
+ *  <li>});</li>
  *	<li></li>
  *	<li>interval.start();</li>
+ *	<li></li>
+ *	<li>if (interval.get('active')) interval.stop();</li>
+ *	<li>interval.set('delay', 10); // speed it up</li>
+ *	<li>interval.set('interval', myFunction); // change the interval</li>
  * </ol>
 
  * @param {Function} fn The function to execute each interval.
@@ -25,12 +32,10 @@ DGE.Interval = DGE.Object.make(function(conf) {
 	scope : null
 }, {
 	'change:delay' : function() {
-		this.stop();
-		this.start();
+		if (this.get('active')) this.start();
 	},
 	'change:interval' : function() {
-		this.stop();
-		this.start();
+		if (this.get('active')) this.start();
 	}
 });
 
@@ -41,7 +46,9 @@ DGE.Interval = DGE.Object.make(function(conf) {
  */
 DGE.Interval.prototype.start = function() {
 
-	this.stop().set('active', true);
+	if (this.get('active')) {
+		this.stop().set('active', true);
+	}
 
 	var interval = this.get('interval');
 	var that = (this.get('scope') || this);
@@ -69,7 +76,7 @@ DGE.Interval.prototype.stop = function() {
 };
 
 /**
- * Formats the passed frames per second into milliseconds (JS only works with ms).
+ * Formats the passed frames per second into milliseconds.
  * @param {Number} fps The frames per second.
  * @return {Number} The number of milliseconds to equal the passed frames per second.
  * @method formatFPS

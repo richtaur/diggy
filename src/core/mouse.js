@@ -3,11 +3,9 @@
 
  * <h3>Example usage:<h3>
  * <ol>
- *  <li>DGE.Mouse.out(DGE.stop);</li>
- *  <li>DGE.Mouse.over(DGE.start);</li>
- *	<li>DGE.Mouse.click(function() {</li>
- *  <li>&nbsp;&nbsp;new DGE.Text({text : DGE.Mouse.x + ', ' + DGE.Mouse.y});</li>
- *  <li>});</li>
+ *  <li>var x = DGE.Mouse.x;</li>
+ *  <li>var y = DGE.Mouse.y;</li>
+ *  <li>if (DGE.Mouse.down) DGE.log('mouse is down');</li>
  * </ol>
 
  * @namespace DGE
@@ -20,7 +18,6 @@ DGE.Mouse = {
 	 * Read-only: true if the mouse is currently down, false if it's up.
 	 * @property down
 	 * @default false
-	 * @final
 	 * @static
 	 * @type Boolean
 	 */
@@ -30,7 +27,6 @@ DGE.Mouse = {
 	 * Read-only: The current x position of the mouse cursor.
 	 * @property x
 	 * @default 0
-	 * @final
 	 * @static
 	 * @type Number
 	 */
@@ -40,7 +36,6 @@ DGE.Mouse = {
 	 * Read-only: The current y position of the mouse cursor.
 	 * @property y
 	 * @default 0
-	 * @final
 	 * @static
 	 * @type Number
 	 */
