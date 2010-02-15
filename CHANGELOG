@@ -1,0 +1,7 @@
+Diggy: DHTML Game Engine
+by Matt Hackett
+
+====================
+v0.1 - 2/14/2010
+- upgraded everything to extend from DGE.Object
+- fixed a major bug in DGE.Interval
