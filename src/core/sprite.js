@@ -12,7 +12,10 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	active : false,
 	angle : 0,
 	delay : DGE.Interval.formatFPS(30),
-// TODO: examine API, is this the ONLY place we use 0-1 instead of 0-100? (see: audio volume)
+	frame : 0,
+	framesMax : 0,
+	moving : false,
+// TODO: examine API, is this the ONLY place we use 0-1 instead of 0-100? (see: audio volume ...)
 	opacity : 1,
 	velocity : 0,
 	visible : true,
@@ -354,19 +357,26 @@ DGE.Sprite.prototype.isTouching = function(sprite) {
 DGE.Sprite.prototype.move = function() {
 
 	var angle = this.get('angle');
+	var frame = this.get('frame');
+	var framesMax = this.get('framesMax');
 	var velocity = this.get('velocity');
 
-	if (
-		(typeof(angle) != 'number')
-		|| (!velocity)
-	) return this;
+	if (frame < framesMax) {
+		var offset = (frame / framesMax);
+	} else {
+		var offset = 1;
+	}
+
+	if (!velocity) return this;
 
 	// What the fuck is wrong with me I used to know how to do this
 	angle = (270 - angle);
 	var r = ((angle * Math.PI) / 180);
 
-	this.x += (Math.sin(r) * velocity);
-	this.y += (Math.cos(r) * velocity);
+	this.x += (Math.sin(r) * velocity * offset);
+	this.y += (Math.cos(r) * velocity * offset);
+
+	this.offset('frame', 1);
 
 	return this.plot();
 
@@ -471,6 +481,7 @@ DGE.Sprite.prototype.hide = function(delay) {
  * @method start
  */
 DGE.Sprite.prototype.start = function() {
+	this.set('frame', 0);
 	this.interval.start();
 	return this.set('active', true);
 };

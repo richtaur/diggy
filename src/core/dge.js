@@ -232,6 +232,16 @@ DGE.getTimestamp = function() {
 };
 
 /**
+ * Gets the current UNIX timestamp in milliseconds.
+ * @return {Number} The timestamp.
+ * @method getTimestampInMS
+ * @static
+ */
+DGE.getTimestampInMS = function() {
+	return Math.round((new Date()).getTime());
+};
+
+/**
  * Generates a random string of n characters.
  * @param {Number} length The length of the key (default: 10).
  * @return {Number} The random string.
