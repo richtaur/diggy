@@ -223,6 +223,7 @@ DGE.Sprite.prototype.center = function(which) {
  */
 DGE.Sprite.prototype.centerOn = function(target) {
 
+	var parent = target.parent;
 	var x = target.x;
 	var y = target.y;
 
@@ -235,13 +236,11 @@ DGE.Sprite.prototype.centerOn = function(target) {
 	y += (target.height / 2);
 
 	// Check parent's offset
-	/*
-	TODO
-	if (target.node.parentNode !== this._node.parentNode) {
-		x += target._node.parentNode.offsetLeft;
-		y += target._node.parentNode.offsetTop;
+	while (parent !== DGE.stage) {
+		x += target.parent.x;
+		y += target.parent.y;
+		parent = parent.parent;
 	}
-	*/
 
 	return this.plot(x, y);
 
