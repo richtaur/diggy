@@ -1,3 +1,7 @@
+// TODO: work out the difference between getting an angle and getting/setting angles between the centers
+// of objects, because that's usually what we want to work with. 
+// see getAngleTo and getCenter
+// may also want an abstract DGE.getAngleTo method
 /**
  * An extensible Sprite class that normalizes DOM API and behavior.
  * @param {Object} conf The configuration settings for this new Sprite object.
@@ -180,24 +184,6 @@ DGE.Sprite.prototype.anchorToStage = function() {
 };
 
 /**
- * Gets or sets the angle used to travel from this Sprite to another.
- * @param {Object} target The target Sprite.
- * @param {Boolean} setNow true to set the angle immediately (then returns this instead of angle).
- * @return {Number | Object} The angle or this for chaining.
- * @method angleTo
- */
-DGE.Sprite.prototype.angleTo = function(target, setNow) {
-
-  var x = (this.x - target.x);
-  var y = (this.y - target.y);
-  var angle = Math.atan2(y, x);
-  angle = ((angle * 180) / Math.PI);
-
-	return (setNow ? this.set('angle', angle) : angle);
-
-};
-
-/**
  * Centers this Sprite within its parent.
  * @param {String} which undefined to center both X and Y, or 'x' or 'y' separately.
  * @return {Object} this (for chaining).
@@ -275,6 +261,46 @@ DGE.Sprite.prototype.fill = function(color, fillAll) {
 		return this.setCSS('background-color', color);
 	}
 };
+
+/**
+ * Gets the angle used to travel from this Sprite to another.
+ * @param {Object} mixed Can be two numbers (x, y) or an object ({x : x, y : y})
+ * which is also compatible with another Sprite, such as: spriteOne.getAngleTo(spriteTwo);
+ * @return {Number} The angle from this Sprite to the passed coordinates.
+ * @method getAngleTo
+ */
+DGE.Sprite.prototype.getAngleTo = function() {
+
+	if (typeof(arguments[0]) == 'object') {
+		var toX = arguments[0].x;
+		var toY = arguments[0].y;
+	} else {
+		var toX = arguments[0];
+		var toY = arguments[1];
+	}
+
+  var x = (this.x - toX);
+  var y = (this.y - toY);
+  var angle = Math.atan2(y, x);
+  angle = ((angle * 180) / Math.PI);
+
+	return angle;
+
+};
+
+/**
+ * Gets the coordinates at the center of this Sprite.
+ * @return {Object} The cordinates at the center represented as {x : x, y : y}.
+ * @method getCenter
+ */
+DGE.Sprite.prototype.getCenter = function() {
+
+	return {
+		x : (this.x + (this.width / 2)),
+		y : (this.y + (this.height / 2))
+	};
+
+}
 
 /**
  * Checks if a Sprite is at the passed coordinates.

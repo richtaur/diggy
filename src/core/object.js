@@ -277,27 +277,30 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		return Obj.children[id];
 	};
 
+// TODO: should this method just get yanked? it didn't work for me anyway, too much weird
+// object reference ...
 	/**
 	 * Creates multiple new objects at once, by id.
-	 * @param {Object} keys An object with keys as ids and the value as additional confs to pass.
-	 * @param {Object} conf (optional) A key/value pair of values to set.
+	 * @param {Object} conf An object with keys as ids and the value as additional confs to pass.
+	 * @param {Object} extra (optional) A key/value pair of values to set.
 	 * @return {Object} The created objects, with their id's as keys.
 	 * @method makeMultiple
 	 * @static
 	 */
-	Obj.makeMultiple = function(keys, conf) {
+	Obj.makeMultiple = function(conf, extra) {
 
 		var objects = {};
 
-		for (var id in objects) {
+		for (var id in conf) {
 
-			for (var k in conf) {
-				objects.id = id;
-				if (objects[k] === undefined) objects[k] = conf[k];
+			var obj = conf[id];
+			obj.id = id;
+
+			for (var key in extra) {
+				if (obj[key] === undefined) obj[key] = extra[key];
 			}
 
-			var obj = new Obj(objects[k]);
-			objects[obj.id] = obj;
+			objects[id] = new Obj(obj);
 
 		}
 

@@ -5,12 +5,10 @@
 DGE.Layer = DGE.extend(DGE.Sprite, function(conf) {
 
 	conf = (conf || {});
-	conf.width = DGE.STAGE_WIDTH;
-	conf.height = DGE.STAGE_HEIGHT;
+	conf.width = DGE.stage.width;
+	conf.height = DGE.stage.height;
 
 	this.init(conf);
-
-	DGE.Layer._layers[this._id] = this;
 
 });
 
