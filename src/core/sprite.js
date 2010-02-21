@@ -1,4 +1,5 @@
 // TODO: work out the difference between getting an angle and getting/setting angles between the centers
+// TODO: this is a big one ... clicking bubbles, and we don't want it to, right?
 // of objects, because that's usually what we want to work with. 
 // see getAngleTo and getCenter
 // may also want an abstract DGE.getAngleTo method
@@ -47,6 +48,7 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		this.setCSS('opacity', opacity);
 	},
 	'change:parent' : function(obj) {
+		this.parent = obj;
 		obj.node.appendChild(this.node);
 	},
 	'change:rotation' : function(angle) {
@@ -112,8 +114,17 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 
 	},
 	remove : function() {
+
+if (!this.node.parentNode) {
+this.setCSS('background', 'yellow');
+this.plot(0, 0);
+DGE.log("parentNode not defined???", this);
+}
+//DGE.log('1. removed from ', this.node, this.node.parentNode);
+
 		this.node.parentNode.removeChild(this.node);
 		this.stop();
+
 	}
 });
 
@@ -126,14 +137,11 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 DGE.Sprite.prototype.initSprite = function(conf) {
 
 	if (conf === undefined) return;
+	if (conf.id) this.node = DGE.getNode(conf.id);
 
-	if (conf.id) {
-		this.node = DGE.getNode(conf.id);
-		if (!this.node) this.node = document.createElement('div');
-	} else {
+	if (!this.node) {
 		conf.parent = (conf.parent || DGE.stage);
 		this.node = document.createElement('div');
-		DGE.stage.node.appendChild(this.node);
 	}
 
 	this.setCSS({
@@ -151,7 +159,7 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 			that.fire('ping');
 
 		},
-		scope : this
+		scope : that
 	});
 
 	return this.init(conf);
@@ -166,6 +174,7 @@ DGE.Sprite.prototype.initSprite = function(conf) {
  * @method angleTo
  */
 DGE.Sprite.prototype.anchorToStage = function() {
+this.setCSS('border', '1px solid blue');
 
 	var p = this.parent;
 	var x = this.x;
@@ -177,9 +186,10 @@ DGE.Sprite.prototype.anchorToStage = function() {
 		p = p.parent;
 	}
 
+	this.set('parent', DGE.stage);
 	this.plot(x, y);
 
-	return this.set('parent', DGE.stage);
+	return this;
 
 };
 
@@ -326,7 +336,7 @@ DGE.Sprite.prototype.isAt = function() {
 
 /**
  * Checks if a Sprite is out of the viewport.
- * @param {Boolean} entirely When set to true, will check if the Sprite is entirely out of bounds. False just checks if any part is out instead of the entire region.
+ * @param {Boolean} entirely When set to true, will check if the Sprite is entirely out of bounds. false just checks if any part is outside.
  * @return {Boolean} true if the Sprite has any regions outside of the stage's bounds.
  * @method isOutOfBounds
  */

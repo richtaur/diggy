@@ -85,3 +85,34 @@ DGE.Interval.prototype.stop = function() {
 DGE.Interval.formatFPS = function(fps) {
 	return Math.ceil(1000 / fps);
 };
+
+/**
+ * TODO
+ */
+DGE.Interval.start = function() {
+
+	for (var id in DGE.Interval.children) {
+
+		var child = DGE.Interval.children[id];
+
+		if (child.get('active')) {
+			child.start();
+		}
+
+	}
+
+};
+
+DGE.Interval.stop = function() {
+
+	for (var id in DGE.Interval.children) {
+
+		var child = DGE.Interval.children[id];
+
+		if (child.get('active')) {
+			child.stop();
+		}
+
+	}
+
+};

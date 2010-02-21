@@ -11,6 +11,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	};
 
 	defaultEvents['set:parent'] = function(obj) {
+		this.parent = obj;
 		obj.add(this);
 	};
 
@@ -92,7 +93,6 @@ function makeObject(fn, defaultSet, defaultEvents) {
 	 */
 	Obj.prototype.add = function(obj) {
 		this.children[obj.id] = obj;
-		obj.parent = this;
 		return this.fire('add');
 	};
 
@@ -202,6 +202,11 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		var that = this;
 
 		function remove() {
+if (that.get('removed')) {
+DGE.log("ALREAYD REMOVED PROBLEM");
+return;
+}
+that.set('removed', true);
 			that.fire('remove');
 			Obj.removeById(that.id);
 		};
@@ -277,6 +282,28 @@ function makeObject(fn, defaultSet, defaultEvents) {
 		return Obj.children[id];
 	};
 
+	/**
+	 * Gets an array of children that have the passed value set.
+	 * @param {String} key The key to look at.
+	 * @param {String} value The value to check.
+	 * @return {Array} An array of found objects.
+	 * @method getByProperty
+	 * @static
+	 */
+	Obj.getByProperty = function(key, value) {
+
+		var children = [];
+
+		for (var id in Obj.children) {
+			if (Obj.children[id].get(key) == value) {
+				children.push(Obj.children[id]);
+			}
+		}
+
+		return children;
+
+	};
+
 // TODO: should this method just get yanked? it didn't work for me anyway, too much weird
 // object reference ...
 	/**
@@ -318,13 +345,17 @@ function makeObject(fn, defaultSet, defaultEvents) {
 
 		var obj = Obj.children[id];
 
-		// Get rid of the object's children
+		// Get rid of the object's children.
 		for (var id in obj.children) {
+DGE.log('3. getting rid of a child:', obj.children[id].node);
 			obj.children[id].remove();
 		}
 
-		// Remove from parent
+		// Remove from parent object.
 		if (obj.parent) delete obj.parent.children[this.id];
+
+		// Remove from this list.
+		delete Obj.children[id];
 
 	};
 
