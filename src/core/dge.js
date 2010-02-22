@@ -338,8 +338,8 @@ DGE.setCSS = (function() {
 				el.style.styleFloat = value;
 				return el;
 			case 'opacity':
-				el.style.filter = DGE.sprintf('alpha(opacity=%s)', (value * 100));
-				el.style.opacity = value;
+				el.style.filter = DGE.sprintf('alpha(opacity=%s)', value);
+				el.style.opacity = (value / 100);
 				return el;
 			case 'rotation':
 				// BUG: this doesn't work in Firefox. Setting via Firefox works ...

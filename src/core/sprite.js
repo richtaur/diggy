@@ -3,6 +3,8 @@
 // of objects, because that's usually what we want to work with. 
 // see getAngleTo and getCenter
 // may also want an abstract DGE.getAngleTo method
+// TODO: get rid of .set('moving') in favor of moving = velocity > 0
+// TODO: add rotationVelocity, just like moving to x, y
 /**
  * An extensible Sprite class that normalizes DOM API and behavior.
  * @param {Object} conf The configuration settings for this new Sprite object.
@@ -21,7 +23,8 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	framesMax : 0,
 	moving : false,
 // TODO: examine API, is this the ONLY place we use 0-1 instead of 0-100? (see: audio volume ...)
-	opacity : 1,
+	opacity : 100,
+	rotation : 0,
 	velocity : 0,
 	visible : true,
 	width : 16,
@@ -118,9 +121,8 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 if (!this.node.parentNode) {
 this.setCSS('background', 'yellow');
 this.plot(0, 0);
-DGE.log("parentNode not defined???", this);
+DGE.log("[ERROR] parentNode not defined", this);
 }
-//DGE.log('1. removed from ', this.node, this.node.parentNode);
 
 		this.node.parentNode.removeChild(this.node);
 		this.stop();
@@ -174,7 +176,6 @@ DGE.Sprite.prototype.initSprite = function(conf) {
  * @method angleTo
  */
 DGE.Sprite.prototype.anchorToStage = function() {
-this.setCSS('border', '1px solid blue');
 
 	var p = this.parent;
 	var x = this.x;

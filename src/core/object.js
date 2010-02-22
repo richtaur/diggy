@@ -1,3 +1,6 @@
+// TODO: make events private, check DGE.Object for crap like .events and .listeners or whatever
+// use privates within here intead as like var events[key]
+// TODO: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
 (function() {
 
 function makeObject(fn, defaultSet, defaultEvents) {
@@ -203,7 +206,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 
 		function remove() {
 if (that.get('removed')) {
-DGE.log("ALREAYD REMOVED PROBLEM");
+DGE.log("[ERROR] this Sprite should have already been removed");
 return;
 }
 that.set('removed', true);
@@ -304,37 +307,6 @@ that.set('removed', true);
 
 	};
 
-// TODO: should this method just get yanked? it didn't work for me anyway, too much weird
-// object reference ...
-	/**
-	 * Creates multiple new objects at once, by id.
-	 * @param {Object} conf An object with keys as ids and the value as additional confs to pass.
-	 * @param {Object} extra (optional) A key/value pair of values to set.
-	 * @return {Object} The created objects, with their id's as keys.
-	 * @method makeMultiple
-	 * @static
-	 */
-	Obj.makeMultiple = function(conf, extra) {
-
-		var objects = {};
-
-		for (var id in conf) {
-
-			var obj = conf[id];
-			obj.id = id;
-
-			for (var key in extra) {
-				if (obj[key] === undefined) obj[key] = extra[key];
-			}
-
-			objects[id] = new Obj(obj);
-
-		}
-
-		return objects;
-		
-	};
-
 	/**
 	 * Removes an object from memory.
 	 * @param {String} id The id of the object to remove.
@@ -347,7 +319,7 @@ that.set('removed', true);
 
 		// Get rid of the object's children.
 		for (var id in obj.children) {
-DGE.log('3. getting rid of a child:', obj.children[id].node);
+DGE.log('[NOTICE] getting rid of a child:', obj.children[id].node);
 			obj.children[id].remove();
 		}
 
