@@ -41,11 +41,15 @@ DGE.Sprite.prototype.animate = function(rules, ms, callbacks, easeFn) {
 		parsedRules[k] = {};
 
 		if (typeof(rules[k]) == 'object') {
+
 			if (rules[k].from === undefined) {
 				parsedRules[k].from = this.get(k);
 			} else {
 				parsedRules[k].from = rules[k].from;
 			}
+
+			parsedRules[k].to = rules[k].to;
+
 		} else {
 
 			parsedRules[k] = {
@@ -88,18 +92,18 @@ DGE.Sprite.prototype.animate = function(rules, ms, callbacks, easeFn) {
 
 /**
  * Fades a Sprite out.
+ * @param {Number} fadeTo The opacity value to fade to.
  * @param {Number} ms (optional) The number of milliseconds the animation should last (default: DGE.Sprite.defaults.animationDelay).
  * @param {Function} complete (optional) The function to call on complete.
- * @param {Boolean} fadeIn (optional) Pass true to fade in, otherwise it fades out (the default).
  * @return {Object} this (for chaining).
  * @method fade
  */
-DGE.Sprite.prototype.fade = function(ms, complete, fadeIn) {
+DGE.Sprite.prototype.fade = function(fadeTo, ms, complete) {
 
 	return this.animate({
 		opacity : {
 			from : this.get('opacity'),
-			to : (fadeIn ? 100 : 0)
+			to : fadeTo
 		}
 	}, ms, {
 		complete : (complete || function() {})

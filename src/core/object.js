@@ -1,6 +1,7 @@
 // TODO: make events private, check DGE.Object for crap like .events and .listeners or whatever
 // use privates within here intead as like var events[key]
 // TODO: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
+// TODO: batch jobs
 (function() {
 
 function makeObject(fn, defaultSet, defaultEvents) {

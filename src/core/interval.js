@@ -46,9 +46,8 @@ DGE.Interval = DGE.Object.make(function(conf) {
  */
 DGE.Interval.prototype.start = function() {
 
-	if (this.get('active')) {
-		this.stop().set('active', true);
-	}
+	if (this.get('active')) this.stop();
+	this.set('active', true);
 
 	var interval = this.get('interval');
 	var that = (this.get('scope') || this);
@@ -86,33 +85,29 @@ DGE.Interval.formatFPS = function(fps) {
 	return Math.ceil(1000 / fps);
 };
 
+// TODO: should this just be a batch job proxy?
 /**
- * TODO
+ * Starts all intervals.
+ * @method start
+ * @static
  */
 DGE.Interval.start = function() {
 
 	for (var id in DGE.Interval.children) {
-
-		var child = DGE.Interval.children[id];
-
-		if (child.get('active')) {
-			child.start();
-		}
-
+		DGE.Interval.children[id].start();
 	}
 
 };
 
+/**
+ * Stops all intervals.
+ * @method stop
+ * @static
+ */
 DGE.Interval.stop = function() {
 
 	for (var id in DGE.Interval.children) {
-
-		var child = DGE.Interval.children[id];
-
-		if (child.get('active')) {
-			child.stop();
-		}
-
+		DGE.Interval.children[id].stop();
 	}
 
 };
