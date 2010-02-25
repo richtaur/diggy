@@ -184,7 +184,7 @@ function makeObject(fn, defaultSet, defaultEvents) {
 			}
 		}
 
-		this.events[key] = e;
+		this.events[key] = (e || function() {});
 
 		var on = DGE.sprintf('on:%s', key);
 
@@ -336,7 +336,10 @@ DGE.log('[NOTICE] getting rid of a child:', obj.children[id].node);
 
 };
 
-DGE.Object = makeObject();
+DGE.Object = makeObject(function(conf) {
+	this.init(conf);
+});
+
 DGE.Object.make = makeObject;
 
 })();
