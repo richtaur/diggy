@@ -1,3 +1,12 @@
+// TODO: clicking on stuff and it higlighting text or whatnot is just bad.
+// -moz-user-select: none;
+// -webkit-user-select: none;
+/*
+// IE:
+if("unselectable" in el) {
+   el.unselectable = "on";
+}
+*/
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
  * http://diggy.sistertrain.com/
