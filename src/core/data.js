@@ -1,3 +1,5 @@
+// TODO: audit the use of new DGE.Object.init({stuff});
+// because now that should work out of the box as just DGE.Object({stuff})
 /**
  * An extremely simple persistent memory manager.
  * @namespace DGE
