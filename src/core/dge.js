@@ -1,6 +1,3 @@
-// TODO: clicking on stuff and it higlighting text or whatnot is just bad.
-// -moz-user-select: none;
-// -webkit-user-select: none;
 /*
 // IE:
 if("unselectable" in el) {
@@ -82,6 +79,52 @@ DGE.platform.TITANIUM = 'titanium';
  * @type String
  */
 DGE.platform.name = (function() {
+
+	var platform = DGE.platform.BROWSER;
+
+	if (typeof(Titanium) == 'object') {
+		platform = DGE.platform.TITANIUM;
+	}
+
+	return platform;
+
+})();
+
+/**
+ * An object for the terms associated with a platform.
+ * @final
+ * @property platform.terms
+ * @type Object
+ */
+DGE.platform.terms = {
+
+	/**
+	 * A string representing the "click" action of this platform (click or tap).
+	 * @final
+	 * @property platform.terms.click
+	 * @type String
+	 */
+	click : ((DGE.platform.name == DGE.platform.BROWSER) ? 'click' : 'tap'),
+
+	/**
+	 * A string representing the "clicked" action of this platform (clicked or tapped).
+	 * @final
+	 * @property platform.terms.clicked
+	 * @type String
+	 */
+	clicked : ((DGE.platform.name == DGE.platform.BROWSER) ? 'clicked' : 'tapped'),
+
+	/**
+	 * A string representing the "clicking" action of this platform (clicking or tapping).
+	 * @final
+	 * @property platform.terms.clicking
+	 * @type String
+	 */
+	clicking : ((DGE.platform.name == DGE.platform.BROWSER) ? 'clicking' : 'tapping')
+
+};
+
+DGE.platform.clickTerm = (function() {
 
 	var platform = DGE.platform.BROWSER;
 
@@ -342,6 +385,10 @@ DGE.setCSS = (function() {
 
 		// Handle cross-platform issues here
 		switch (style) {
+			case 'border-radius':
+				el.style['-moz-border-radius'] = value;
+				el.style['-webkit-border-radius'] = value;
+				return el;
 			case 'float':
 				el.style.cssFloat = value;
 				el.style.styleFloat = value;
@@ -351,7 +398,7 @@ DGE.setCSS = (function() {
 				el.style.opacity = (value / 100);
 				return el;
 			case 'rotation':
-				// BUG: this doesn't work in Firefox. Setting via Firefox works ...
+				// Known bug: this doesn't work in Firefox, though setting via Firebug works ...
 				el.style['-moz-transform'] = DGE.sprintf('rotate(%s)', value);
 				el.style['-webkit-transform'] = DGE.sprintf('rotate(%s)', value);
 				return el;

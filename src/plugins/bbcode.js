@@ -17,6 +17,12 @@
  */
 DGE.formatBBCode = function(code) {
 
+	// Aligns the text.
+	// Usage: [align=foo]any text here[/align]
+	// Output: <span style="text-align: foo;">any text here</span>
+	// NOTE: to force support, also applies a block display.
+	code = code.replace(/\[align=(.*?)\](.*?)\[\/align\]/gi, '<span style="display: block; text-align: $1;">$2</span>');
+
 	// Bolds the text.
 	// Usage: [b]any text here[/b]
 	// Output: <span style="font-weight: bold;">any text here</span>
@@ -25,12 +31,12 @@ DGE.formatBBCode = function(code) {
 	// Colors the text.
 	// Usage: [color=foo]any text here[/color]
 	// Output: <span style="color: foo;">any text here</span>
-	// foo can be any of: color-name (like "light-grey"), #888 (3-digit hex), #888888 (6-digit hex)
+	// foo can be any of: color-name (like "light-grey"), #888 (3-digit hex), #888888 (6-digit hex).
 	code = code.replace(/\[color=(\#[0-9a-f]{3,6}|[a-z\-]+)\](.*?)\[\/color\]/gi, '<span style="color: $1;">$2</span>');
 
-	// Sizes the text.
-	// Usage: [font-family]any text here[/font]
-	// Output: <span style="font-family: family;">any text here</span>
+	// Selects a font family.
+	// Usage: [font=foo]any text here[/font]
+	// Output: <span style="font-family: foo;">any text here</span>
 	code = code.replace(/\[font=(.*?)\](.*?)\[\/font\]/gi, '<span style="font-family: $1;">$2</span>');
 
 	// Italicizes the text.
@@ -39,8 +45,8 @@ DGE.formatBBCode = function(code) {
 	code = code.replace(/\[i](.*?)\[\/i\]/gi, '<span style="font-style: italic;">$1</span>');
 
 	// Sizes the text.
-	// Usage: [size=number]any text here[/size]
-	// Output: <span style="font-size: {number}px;">any text here</span>
+	// Usage: [size=foo]any text here[/size]
+	// Output: <span style="font-size: {foo}px;">any text here</span>
 	code = code.replace(/\[size=(\d+)\](.*?)\[\/size\]/gi, '<span style="font-size: $1px;">$2</span>');
 
 	// Underlines the text.
@@ -48,9 +54,10 @@ DGE.formatBBCode = function(code) {
 	// Output: <span style="text-decoration: underline;">any text here</span>
 	code = code.replace(/\[u](.*?)\[\/u\]/gi, '<span style="text-decoration: underline;">$1</span>');
 
+	// TODO: this will only work in browsers. What about Titanium?
 	// Adds a hyperlink.
-	// Usage: [url=anyurl]any text here[/url]
-	// Output: <span style="text-decoration: underline;">any text here</span>
+	// Usage: [url=foo]any text here[/url]
+	// Output: <a href="foo" target="_new">any text here</a>
 	code = code.replace(/\[url=(.*?)\](.*?)\[\/url\]/gi, '<a href="$1" target="_new">$2</a>');
 
 	return code;
