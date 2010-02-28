@@ -26,6 +26,7 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 	autoAdjust : false,
 	color : '#FFF',
 	font : 'Sans-Serif',
+	selectable : false,
 	size : 10
 }, {
 	'change:align' : function(align) {
@@ -36,6 +37,11 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 	},
 	'change:font' : function(font) {
 		this.setCSS('font-family', font);
+	},
+	'change:selectable' : function(selectable) {
+		var value = (selectable ? 'text' : 'none');
+		this.setCSS('-moz-user-select', value);
+		this.setCSS('-webkit-user-select', value);
 	},
 	'change:shadow' : function(rule) {
 		this.setCSS('text-shadow', rule);
