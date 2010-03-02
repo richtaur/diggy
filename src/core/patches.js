@@ -17,7 +17,13 @@ Array.prototype.indexOf = Array.prototype.indexOf || function(el/*, from*/) {
 
 };
 
-// ' foo '.trim(); // returns "foo"
+// 'hi there'.capitalize(); // returns "Hi There".
+// TODO
+String.prototype.capitalize = function() {
+	return 'TODO';
+};
+
+// ' foo '.trim(); // returns "foo".
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g, '');
 };
