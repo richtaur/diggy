@@ -105,7 +105,7 @@ DGE.platform.terms = {
 	 * @property platform.terms.click
 	 * @type String
 	 */
-	click : ((DGE.platform.name == DGE.platform.BROWSER) ? 'tap' : 'click'),
+	click : ((DGE.platform.name == DGE.platform.BROWSER) ? 'click' : 'tap'),
 
 	/**
 	 * A string representing the "clicked" action of this platform (clicked or tapped).
