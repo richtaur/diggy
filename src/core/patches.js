@@ -18,9 +18,10 @@ Array.prototype.indexOf = Array.prototype.indexOf || function(el/*, from*/) {
 };
 
 // 'hi there'.capitalize(); // returns "Hi There".
-// TODO
 String.prototype.capitalize = function() {
-	return 'TODO';
+	return this.replace(/\w+/g, function(str) {
+		return (str.charAt(0).toUpperCase() + str.substr(1));
+	});
 };
 
 // ' foo '.trim(); // returns "foo".
