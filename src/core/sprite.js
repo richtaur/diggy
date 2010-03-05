@@ -22,8 +22,8 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	delay : DGE.Interval.formatFPS(30),
 	frame : 0,
 	framesMax : 0,
+	image : null,
 	moving : false,
-// TODO: examine API, is this the ONLY place we use 0-1 instead of 0-100? (see: audio volume ...)
 	opacity : 100,
 	rotation : 0,
 	velocity : 0,
@@ -43,7 +43,7 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		this.interval.set('delay', delay);
 	},
 	'change:image' : function(url) {
-		this.setCSS(
+		if (url) this.setCSS(
 			'background-image',
 			DGE.sprintf('url(%s)', url)
 		);
