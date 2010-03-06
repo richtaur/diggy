@@ -1,3 +1,4 @@
+// TODO: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
 /**
  * Creates a Sprite Sheet.
  * @param {Object} conf The configuration settings for this new Sprite Sheet object.

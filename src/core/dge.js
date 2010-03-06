@@ -1,9 +1,3 @@
-/*
-// IE:
-if("unselectable" in el) {
-   el.unselectable = "on";
-}
-*/
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
  * http://diggy.sistertrain.com/
@@ -11,6 +5,7 @@ if("unselectable" in el) {
  * @module Diggy
  */
 
+// TODO: redo the makeId() stuff to instead increment a number?
 // TODO: need to rethink Assets and Loader, they should almost be the same thing?
 // TODO: Scenes? Think about transitions. Do layers even make sense?
 /* TODO: think about how I was using DGE.layers before, like doing this.stats and this.movesText

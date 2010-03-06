@@ -39,9 +39,13 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 		this.setCSS('font-family', font);
 	},
 	'change:selectable' : function(selectable) {
+
 		var value = (selectable ? 'text' : 'none');
+		this.node.unselectable = (selectable ? 'off' : 'on');
+
 		this.setCSS('-moz-user-select', value);
 		this.setCSS('-webkit-user-select', value);
+
 	},
 	'change:shadow' : function(rule) {
 		this.setCSS('text-shadow', rule);
