@@ -99,6 +99,15 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		};
 
 	},
+	'on:mouseUp' : function(fn) {
+
+		var that = this;
+
+		this.node.onmouseup = function() {
+			fn.apply(that, arguments);
+		};
+
+	},
 	'on:mouseOver' : function(fn) {
 
 		var that = this;
