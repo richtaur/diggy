@@ -335,7 +335,7 @@ DGE.on = (document.addEventListener ? function(el, e, fn) {
 DGE.rand = function(from, to) {
 
   if (from.length === undefined) {
-    return (from + Math.floor((to - from + 1) * (Math.random() % 1)));
+		return (from + Math.floor((to - from + 1) * Math.random())); 
   } else {
     return arguments.callee(0, (from.length - 1));
   }

@@ -65,8 +65,8 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 		var sheet = this.get('sheet');
 		if (!sheet) return;
 
-		var sheetX = this.get('sheetX');
-		var sheetY = this.get('sheetY');
+		var sheetX = (this.get('sheetX') || 0);
+		var sheetY = (this.get('sheetY') || 0);
 		var spriteWidth = sheet.get('spriteWidth');
 		var spriteHeight = sheet.get('spriteHeight');
 		var x = (sheet.get('x') + (sheetX * spriteWidth));

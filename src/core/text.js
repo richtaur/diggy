@@ -1,3 +1,4 @@
+// TODO: make autoAdjust account for padding?
 /**
  * Extends DGE.Sprite with features helpful for rendering text.
 
@@ -66,14 +67,17 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
  */
 DGE.Text.prototype.adjust = function() {
 
-	this.node.style.width = '500px';
-	this.node.style.height = '400px';
-DGE.log(this.node.style.width, this.node.style.height);
+	var autoAdjust = this.get('autoAdjust');
 
-// TODO: make sure adjusting works (i don't think its' working AT ALL)
+	if ((autoAdjust === true) || (autoAdjust == 'width')) {
+		this.setCSS('width', 'auto');
+		this.set('width', this.node.offsetWidth);
+	}
 
-	this.set('width', this.node.offsetWidth);
-	this.set('height', this.node.offsetHeight);
+	if ((autoAdjust === true) || (autoAdjust == 'height')) {
+		this.setCSS('height', 'auto');
+		this.set('height', this.node.offsetHeight);
+	}
 
 	return this;
 
