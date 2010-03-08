@@ -1,4 +1,3 @@
-// TODO: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
 /**
  * Creates a Sprite Sheet.
  * @param {Object} conf The configuration settings for this new Sprite Sheet object.
@@ -32,7 +31,6 @@ DGE.Sprite.on('change:sheet', function(sheet) {
 });
 
 DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
-// TODO
 
 	var sheet = this.get('sheet');
 	if (!sheet) return;
@@ -41,26 +39,21 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 	var spriteHeight = sheet.get('spriteHeight');
 	var width = sheet.get('width');
 	var height = sheet.get('height');
-	var tileX = (width / spriteWidth);
-/*
-	var tileY = ();
-*/
 
-// 240x48, 48x48
-// 240 / 48 = 5
+	var maxX = (width / spriteWidth);
+	var maxY = (height / spriteHeight);
+	var tileY = Math.floor(sheetIndex / maxX);
+	var tileX = (sheetIndex - (tileY * maxX));
+	var x = sheet.get('x') + (tileX * spriteWidth);
+	var y = sheet.get('y') + (tileY * spriteHeight);
 
-	var x = -((spriteWidth * sheetIndex) + sheet.get('x'));
-	var y = -sheet.get('y');
-
-	this.setCSS('background-position', DGE.sprintf('%spx %spx', x, y));
+	this.setCSS('background-position', DGE.sprintf('-%spx -%spx', x, y));
 
 });
 
 (function() {
 
 	function position() {
-// TODO: fucking. need to see if there's background-position-left, or -x, or whatever
-// to separate this bullshit out
 
 		var sheet = this.get('sheet');
 		if (!sheet) return;
@@ -73,7 +66,6 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 		var y = (sheet.get('y') + (sheetY * spriteHeight));
 
 		this.setCSS('background-position', DGE.sprintf('-%spx -%spx', x, y));
-DGE.log('background-position:', DGE.sprintf('-%spx -%spx', x, y));
 		
 	};
 
@@ -82,6 +74,7 @@ DGE.log('background-position:', DGE.sprintf('-%spx -%spx', x, y));
 
 })();
 
+// TODO: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
 DGE.Sprite.set('sheet', null);
 DGE.Sprite.set('sheetIndex', 0);
 DGE.Sprite.set('sheetX', 0);
