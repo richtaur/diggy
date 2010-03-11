@@ -5,13 +5,9 @@
  * @module Diggy
  */
 
+// TODO: localStorage breaks IE (sigh), should use cookies perhaps?
 // TODO: redo the makeId() stuff to instead increment a number?
 // TODO: need to rethink Assets and Loader, they should almost be the same thing?
-// TODO: Scenes? Think about transitions. Do layers even make sense?
-/* TODO: think about how I was using DGE.layers before, like doing this.stats and this.movesText
-that's some ugliness, because Sprite is already such a packed Object. If you did your own this.add (for a sprite)
-you'd overwrite an important method. Perhaps .children or something? (yes. just audit this)
-*/
 
 /**
  * DGE is the single global utilizied by Diggy.

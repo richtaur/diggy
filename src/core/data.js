@@ -10,7 +10,17 @@ DGE.Data = new DGE.Object().init({
 });
 
 DGE.Data.get = function(key) {
-	return localStorage[key];
+
+	var value = localStorage[key];
+
+	if (value === 'true') {
+		return true;
+	} else if (value === 'false') {
+		return false;
+	}
+
+	return value;
+
 };
 
 DGE.Data.set = function(key, value) {
