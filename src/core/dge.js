@@ -381,24 +381,40 @@ DGE.setCSS = (function() {
 
 		// Handle cross-platform issues here
 		switch (style) {
+
 			case 'border-radius':
 				el.style['border-radius'] = value;
 				el.style['-moz-border-radius'] = value;
 				el.style['-webkit-border-radius'] = value;
 				return el;
+
+			case 'box-shadow':
+				el.style['box-shadow'] = value;
+				el.style['-moz-box-shadow'] = value;
+				el.style['-webkit-box-shadow'] = value;
+				/*
+					If I *ever* feel like wasting some time, I guess I could make this work in IE. Here's how:
+					filter:  progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff'); / IE6,IE7 /
+          -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff')"; / IE8 /
+				*/
+				break;
+
 			case 'float':
 				el.style.cssFloat = value;
 				el.style.styleFloat = value;
 				return el;
+
 			case 'opacity':
 				el.style.filter = DGE.sprintf('alpha(opacity=%s)', value);
 				el.style.opacity = (value / 100);
 				return el;
+
 			case 'rotation':
 				// Known bug: this doesn't work in Firefox, though setting via Firebug works ...
 				el.style['-moz-transform'] = DGE.sprintf('rotate(%s)', value);
 				el.style['-webkit-transform'] = DGE.sprintf('rotate(%s)', value);
 				return el;
+
 		}
 
 		style = dashToCamelCase(style);
