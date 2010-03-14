@@ -176,11 +176,12 @@ DGE.log = function() {
 			try {
 				console.log.apply(DGE, arguments);
 			} catch(e) {
-				console.log(Array.prototype.join.apply(arguments, [',']));
+				//console.log(Array.prototype.join.apply(arguments, [',']));
 			}
 			break;
 		case DGE.platform.TITANIUM:
-			Titanium.API.info.apply(DGE, arguments);
+			//Titanium.API.info.apply(DGE, arguments);
+			Titanium.API.info(arguments[0]);
 			break;
 	}
 
