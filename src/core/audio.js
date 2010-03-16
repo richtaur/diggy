@@ -145,6 +145,8 @@ DGE.Audio.available = (function() {
  */
 DGE.Audio.enabled = true;
 
+// TODO: clean up below here
+
 /*
 DGE.Audio.mute = function() {
 };
