@@ -102,8 +102,12 @@ DGE.Audio.prototype.play = function() {
 DGE.Audio.prototype.stop = function() {
 
 	if (DGE.platform.name == DGE.platform.BROWSER) {
-		this.node.pause();
-		this.node.currentTime = 0;
+		// The try/catch is here because this error gets thrown in Gecko and Webkit:
+		// An attempt was made to use an object that is not, or is no longer, usable" code: "11"
+		try {
+			this.node.pause();
+			this.node.currentTime = 0;
+		} catch(e) {}
 	} else {
 		this.node.stop();
 	}

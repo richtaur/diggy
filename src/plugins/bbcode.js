@@ -54,7 +54,6 @@ DGE.formatBBCode = function(code) {
 	// Output: <span style="text-decoration: underline;">any text here</span>
 	code = code.replace(/\[u](.*?)\[\/u\]/gi, '<span style="text-decoration: underline;">$1</span>');
 
-	// TODO: this will only work in browsers. What about Titanium?
 	// Adds a hyperlink.
 	// Usage: [url=foo]any text here[/url]
 	// Output: <a href="foo" target="_new">any text here</a>
