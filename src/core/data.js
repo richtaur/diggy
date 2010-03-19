@@ -1,16 +1,13 @@
 // TODO: need to check if localStorage exists. It doesn't in IE and Titanium. Find solutions for those.
-// TODO: audit the use of new DGE.Object.init({stuff});
-// because now that should work out of the box as just DGE.Object({stuff})
 /**
  * An extremely simple persistent memory manager.
  * @namespace DGE
  * @class Data
  */
-DGE.Data = new DGE.Object().init({
+DGE.Data = new DGE.Object({
 	id : 'DGE.Data'
 });
 
-/*
 DGE.Data.get = function(key) {
 
 	var value = localStorage[key];
@@ -48,14 +45,12 @@ DGE.Data.set = function(key, value) {
 	}
 
 };
-*/
 
 /**
  * Empties the persistent memory.
  * @return {Object} this (for chaining).
  * @method add
  */
-/*
 DGE.Data.empty = function() {
 
 	DGE.Data.data = {};
@@ -64,4 +59,3 @@ DGE.Data.empty = function() {
 	return DGE.Data;
 
 };
-*/

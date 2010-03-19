@@ -1,3 +1,4 @@
+// TODO: <audio> sucks. Let's fall back to SoundManager2 :(
 /**
  * The DGE.Audio Object manages audio in your gameomg!
  * @param {Object} conf The configuration settings for this new Audio object.
@@ -140,28 +141,6 @@ DGE.Audio.available = (function() {
  * but disabled (meaning this flag is set to false).
  * @property enabled
  * @default true
- * @static
  * @type Boolean
  */
 DGE.Audio.enabled = true;
-
-// TODO: clean up below here
-
-/*
-DGE.Audio.mute = function() {
-};
-*/
-
-/*
- * Begins playing the music and fades it in.
- * @param {Number} ms The number of milliseconds to take when fading in.
- * @param {Number} volume (optional) The volume to fade in to (default: 100).
- * @method fadeIn
- */
-
-/*
- * Stops playing the music by fading it out and stopping.
- * @param {Number} ms The number of milliseconds to take when fading out.
- * @param {Number} volume (optional) The volume to fade out to (default: 0).
- * @method fadeOut
- */

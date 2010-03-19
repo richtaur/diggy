@@ -85,7 +85,6 @@ DGE.Interval.formatFPS = function(fps) {
 	return Math.ceil(1000 / fps);
 };
 
-// TODO: should this just be a batch job proxy?
 /**
  * Starts all intervals.
  * @method start

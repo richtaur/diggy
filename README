@@ -1,4 +1,6 @@
+----------
 ABOUT
+----------
 
 Diggy is a DHTML Game Engine (DGE).
 If you tried to pronounce "DGE", you'd probably say it like "Diggy".
@@ -11,7 +13,9 @@ Diggy is not:
 	- a canvas or SVG library
 	- meant to do anything but make games
 
+----------
 AUTHOR
+----------
 
 Matt Hackett
 richtaur.com

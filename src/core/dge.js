@@ -5,7 +5,7 @@
  * @module Diggy
  */
 
-// TODO: localStorage breaks IE (sigh, and Titanium), should use cookies perhaps?
+// TODO: I think I like set('background', 'red') better than .fill('red') // weird like that
 // TODO: redo the makeId() stuff to instead increment a number?
 // TODO: need to rethink Assets and Loader, they should almost be the same thing?
 

@@ -1,11 +1,6 @@
 // TODO: CENTER DOESNT FUCKING WORK
-// TODO: work out the difference between getting an angle and getting/setting angles between the centers
 // TODO: this is a big one ... clicking bubbles, and we don't want it to, right?
-// of objects, because that's usually what we want to work with. 
-// see getAngleTo and getCenter
-// may also want an abstract DGE.getAngleTo method
-// TODO: get rid of .set('moving') in favor of moving = velocity > 0
-// TODO: add rotationVelocity, just like moving to x, y
+// TODO: add rotationVelocity? just like moving to x, y
 /**
  * An extensible Sprite class that normalizes DOM API and behavior.
  * @param {Object} conf The configuration settings for this new Sprite object.
@@ -23,7 +18,6 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	frame : 0,
 	framesMax : 0,
 	image : null,
-	moving : false,
 	opacity : 100,
 	rotation : 0,
 	velocity : 0,
@@ -127,16 +121,8 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 
 	},
 	remove : function() {
-
-if (!this.node.parentNode) {
-this.setCSS('background', 'yellow');
-this.plot(0, 0);
-DGE.log("[ERROR] parentNode not defined", this);
-}
-
 		this.node.parentNode.removeChild(this.node);
 		this.stop();
-
 	}
 });
 
@@ -167,7 +153,7 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 		delay : conf.delay,
 		interval : function() {
 
-			if (that.get('moving')) that.move();
+			if (that.get('velocity')) that.move();
 			that.fire('ping');
 
 		},
@@ -291,16 +277,25 @@ DGE.Sprite.prototype.fill = function(color, fillAll) {
  */
 DGE.Sprite.prototype.getAngleTo = function() {
 
-	if (typeof(arguments[0]) == 'object') {
-		var toX = arguments[0].x;
-		var toY = arguments[0].y;
+	var obj = arguments[0];
+
+	if (typeof(obj) == 'object') {
+		if (obj.getCenter) {
+			var center = obj.getCenter();
+			var toX = center.x;
+			var toY = center.y;
+		} else {
+			var toX = obj.x;
+			var toY = obj.y;
+		}
 	} else {
 		var toX = arguments[0];
 		var toY = arguments[1];
 	}
 
-  var x = (this.x - toX);
-  var y = (this.y - toY);
+	var center = this.getCenter();
+  var x = (center.x - toX);
+  var y = (center.y - toY);
   var angle = Math.atan2(y, x);
   angle = ((angle * 180) / Math.PI);
 

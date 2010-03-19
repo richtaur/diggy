@@ -1,7 +1,6 @@
 // TODO: make events private, check DGE.Object for crap like .events and .listeners or whatever
 // use privates within here intead as like var events[key]
 // TODO: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
-// TODO: batch jobs
 (function() {
 
 	function makeObject(fn, defaultSet, defaultEvents) {
@@ -198,29 +197,11 @@
 
 		/**
 		 * Removes this object from memory.
-		 * @param {Number} delay (optional) The number of ms to wait before removing.
 		 * @method remove
 		 */
 		Obj.prototype.remove = function(delay) {
-
-			var that = this;
-
-			function remove() {
-	if (that.get('removed')) {
-	DGE.log("[ERROR] this Sprite should have already been removed");
-	return;
-	}
-	that.set('removed', true);
-				that.fire('remove');
-				Obj.removeById(that.id);
-			};
-
-			if (delay) {
-				setTimeout(remove, delay);
-			} else {
-				remove();
-			}
-
+			this.fire('remove');
+			Obj.removeById(this.id);
 		};
 
 		/**
@@ -331,7 +312,7 @@
 
 			// Get rid of the object's children.
 			for (var id in obj.children) {
-	DGE.log('[NOTICE] getting rid of a child:', obj.children[id].node);
+DGE.log('[NOTICE] getting rid of a child:', obj.children[id].node);
 				obj.children[id].remove();
 			}
 

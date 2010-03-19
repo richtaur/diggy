@@ -149,7 +149,6 @@
 				sfx.shot.play();
 
 				shots[i].plot((ship.x + ship.width), (ship.y + 2));
-				shots[i].set('moving', true);
 				shots[i].show();
 				shots[i].start();
 
@@ -178,7 +177,6 @@
 				new DGE.Sprite({
 					image : 'gfx/ufo_ds.gif',
 					//group : GROUP_UFOS,
-					moving : true,
 					velocity : VELOCITY_UFO,
 					x : DGE.stage.width,
 					y : DGE.rand(ship.height, (DGE.stage.height - 32)),
@@ -212,7 +210,10 @@
 								numUFOs--;
 								this.stop();
 								this.set('image', 'gfx/explode.gif');
-								this.remove(600);
+								var that = this;
+								setTimeout(function() {
+									that.remove();
+								}, 600);
 
 								return;
 
@@ -222,8 +223,7 @@
 						// Did we destroy the ship?
 						if (this.isTouching(ship)) newGame();
 						
-					})
-					.start();
+					}).start();
 
 			}
 

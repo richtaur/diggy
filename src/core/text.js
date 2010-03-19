@@ -57,25 +57,27 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 	},
 	'change:text' : function(text) {
 		this.node.innerHTML = text;
-		if (this.get('autoAdjust')) this.adjust();
+		var autoAdjust = this.get('autoAdjust');
+		if (autoAdjust) this.adjust(autoAdjust);
 	}
 });
 
 /**
  * Adjusts the width and height of the Text based on its contents.
+ * @param {Object} type The type of adjusting to do ('width', 'height', or true for both).
  * @return {Object} this (for chaining).
  * @method adjust
  */
-DGE.Text.prototype.adjust = function() {
+DGE.Text.prototype.adjust = function(type) {
 
-	var autoAdjust = this.get('autoAdjust');
-
-	if ((autoAdjust === true) || (autoAdjust == 'width')) {
+	if ((type === true) || (type == 'width')) {
 		this.setCSS('width', 'auto');
+DGE.log(this.node.style.width);
+DGE.log('offsetWidth:', this.node.offsetWidth);
 		this.set('width', this.node.offsetWidth);
 	}
 
-	if ((autoAdjust === true) || (autoAdjust == 'height')) {
+	if ((type === true) || (type == 'height')) {
 		this.setCSS('height', 'auto');
 		this.set('height', this.node.offsetHeight);
 	}
