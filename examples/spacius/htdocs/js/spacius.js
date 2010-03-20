@@ -27,7 +27,7 @@
 		var color = (velocity * 3);
 
 		this.plot(DGE.stage.width, DGE.rand(0, DGE.stage.height));
-		this.fill(DGE.sprintf('#%s%s%s', color, color, color));
+		this.set('background', DGE.sprintf('#%s%s%s', color, color, color));
 		this.set('velocity', velocity);
 
 		return this;
@@ -38,9 +38,10 @@
 
 		DGE.init({
 			id : 'spacius',
+			background : '#000',
 			width : 400,
 			height : 300
-		}).fill('#000');
+		});
 
 		new DGE.Loader([
 			'gfx/explode.gif',

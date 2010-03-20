@@ -28,6 +28,9 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	y : 0,
 	z : 1
 }, {
+	'change:background' : function(color) {
+		this.setCSS('background-color', color);
+	},
 	'change:cursor' : function(cursor) {
 		if (cursor === true) cursor = 'pointer';
 		if (cursor === false) cursor = 'auto';
@@ -251,21 +254,6 @@ DGE.Sprite.prototype.centerOn = function(target) {
 
 	return this.plot(x, y);
 
-};
-
-/**
- * Fill the Sprite with the passed color.
- * @param {String} color A CSS-valid color (hexcode, etc.).
- * @param {Boolean} fillAll true to fill the entire Sprite, overriding any image set.
- * @return {Object} this (for chaining).
- * @method fill
- */
-DGE.Sprite.prototype.fill = function(color, fillAll) {
-	if (fillAll) {
-		return this.setCSS('background', color);
-	} else {
-		return this.setCSS('background-color', color);
-	}
 };
 
 /**
