@@ -1,6 +1,4 @@
 // TODO: CENTER DOESNT FUCKING WORK
-// TODO: this is a big one ... clicking bubbles, and we don't want it to, right?
-// TODO: add rotationVelocity? just like moving to x, y
 /**
  * An extensible Sprite class that normalizes DOM API and behavior.
  * @param {Object} conf The configuration settings for this new Sprite object.

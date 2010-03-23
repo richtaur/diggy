@@ -1,5 +1,4 @@
-// TODO: make events private, check DGE.Object for crap like .events and .listeners or whatever
-// use privates within here intead as like var events[key]
+// TODO: use privates, check DGE.Object for crap like .events and .listeners or whatever
 // TODO: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
 (function() {
 
@@ -312,7 +311,6 @@
 
 			// Get rid of the object's children.
 			for (var id in obj.children) {
-DGE.log('[NOTICE] getting rid of a child:', obj.children[id].node);
 				obj.children[id].remove();
 			}
 

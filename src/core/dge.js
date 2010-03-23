@@ -5,6 +5,7 @@
  * @module Diggy
  */
 
+// TODO: rethink the concept of Assets, Loader and loading ... DGE.init itself needs to wait for the .swf file to load, for example
 // TODO: redo the makeId() stuff to instead increment a number?
 // TODO: need to rethink Assets and Loader, they should almost be the same thing?
 
@@ -134,8 +135,9 @@ DGE.platform.clickTerm = (function() {
  * @method init
  * @static
  */
-DGE.init = function(conf) {
+DGE.init = function(conf, complete) {
 	DGE.stage = new DGE.Sprite(conf);
+	DGE.Audio.init(complete);
 	return DGE.stage;
 };
 

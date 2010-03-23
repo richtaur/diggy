@@ -1,6 +1,9 @@
-// TODO: <audio> sucks. Let's fall back to SoundManager2 :(
+(function() {
+
+var swf;
+
 /**
- * The DGE.Audio Object manages audio in your gameomg!
+ * The DGE.Audio object manages audio in your game OMGZ!
  * @param {Object} conf The configuration settings for this new Audio object.
  * @namespace DGE
  * @class Audio
@@ -10,16 +13,6 @@
 DGE.Audio = DGE.Object.make(function(conf) {
 
 	if (conf === undefined) return;
-
-	if (DGE.platform.name == DGE.platform.BROWSER) {
-
-		this.node = document.createElement('audio');
-
-		if (this.node) {
-			DGE.stage.node.appendChild(this.node);
-		}
-
-	}
 
 	this.init(conf);
 
@@ -31,8 +24,7 @@ DGE.Audio = DGE.Object.make(function(conf) {
 		if (DGE.platform.name == DGE.platform.TITANIUM) {
 			this.node = Titanium.Media.createSound(file);
 		} else {
-			this.node.src = file;
-			this.node.load();
+			swf.load(this.id, file);
 		}
 
 	},
@@ -91,7 +83,7 @@ DGE.Audio.prototype.pause = function() {
  * @method play
  */
 DGE.Audio.prototype.play = function() {
-	if (DGE.Audio.enabled) this.node.play();
+	if (DGE.Audio.enabled) swf.play(this.id);
 	return this.fire('play');
 };
 
@@ -102,6 +94,7 @@ DGE.Audio.prototype.play = function() {
  */
 DGE.Audio.prototype.stop = function() {
 
+	// TODO
 	if (DGE.platform.name == DGE.platform.BROWSER) {
 		// The try/catch is here because this error gets thrown in Gecko and Webkit:
 		// An attempt was made to use an object that is not, or is no longer, usable" code: "11"
@@ -129,8 +122,7 @@ DGE.Audio.available = (function() {
 	if (DGE.platform.name == DGE.platform.TITANIUM) {
 		return true;
 	} else {
-		var el = document.createElement('audio');
-		return !!el;
+		return !!swf;
 	}
 
 })();
@@ -144,3 +136,59 @@ DGE.Audio.available = (function() {
  * @type Boolean
  */
 DGE.Audio.enabled = true;
+
+/**
+ * The location of Diggy's .swf file for audio.
+ * Set to use flash instead of the audio tag.
+ * @property swfSrc
+ * @default swf/external_interface.swf
+ * @type String
+ */
+DGE.Audio.swfSrc = 'swf/external_interface.swf';
+
+DGE.Audio.init = function(complete) {
+
+	var container = document.createElement('div');
+	var html = [];
+	var interval = new DGE.Interval({
+		delay : 100,
+		interval : function() {
+			if (swf && (typeof(swf.load) == 'function')) {
+				interval.stop();
+				complete();
+			}
+		}
+	});
+
+	// Note: using user agent is bad practice. I am lazy.
+	if (navigator.userAgent.match(/MSIE/i)) {
+		html.push('<object data="{swf}" id="dge_audio" type="application/x-shockwave-flash" width="0" height="0">');
+		html.push('<param name="movie" value="{swf}">');
+		html.push('<param name="allowFullScreen" value="false">');
+		html.push('<param name="allowScriptAccess" value="always">');
+		html.push('<param name="quality" value="high">');
+		html.push('</object>');
+	} else {
+		html.push('<embed');
+		html.push('	id="dge_audio"');
+		html.push('	name="dge_audio"');
+		html.push('	src="{swf}"');
+		html.push('	allowFullScreen="false"');
+		html.push('	allowScriptAccess="always"');
+		html.push('	type="application/x-shockwave-flash"');
+		html.push('	width="0"');
+		html.push('	height="0"');
+		html.push('></embed>');
+	}
+
+	container.innerHTML = html.join('').replace(/{swf}/g, DGE.Audio.swfSrc);
+	//DGE.setCSS(container, 'display', 'none');
+	DGE.stage.node.appendChild(container);
+
+	swf = DGE.getNode('dge_audio');
+
+	interval.start();
+
+};
+
+})();
