@@ -81,11 +81,11 @@ files = [
 	};
 
 	/**
-	 * Gets the number of milliseconds past since the Loader started.
-	 * @return {Number} The number of ms since having started.
-	 * @method time
+	 * Gets the number of milliseconds since the Loader started.
+	 * @return {Number} The number of milliseconds since having started.
+	 * @method getTime
 	 */
-	this.time = function() {
+	this.getTime = function() {
 		return ((dateStop || new Date()).getTime() - dateStart.getTime());
 	};
 

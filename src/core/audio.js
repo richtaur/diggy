@@ -144,11 +144,25 @@ DGE.Audio.enabled = true;
  * Set to use flash instead of the audio tag.
  * @property swfSrc
  * @default swf/external_interface.swf
+ * @static
  * @type String
  */
 DGE.Audio.swfSrc = 'swf/external_interface.swf';
 
-DGE.Audio.init = function(complete) {
+/**
+ * Initializes audio.
+ * @param {Function} complete (optional) The callback to fire.
+ * @method callback
+ * @static
+ */
+DGE.Audio.init = function(callback) {
+
+	callback = (callback || function() {});
+
+	if (DGE.platform.name == DGE.platform.TITANIUM) {
+		callback();
+		return;
+	}
 
 	var container = document.createElement('div');
 	var html = [];
@@ -157,7 +171,7 @@ DGE.Audio.init = function(complete) {
 		interval : function() {
 			if (swf && (typeof(swf.load) == 'function')) {
 				interval.stop();
-				complete();
+				callback();
 			}
 		}
 	});
@@ -165,10 +179,10 @@ DGE.Audio.init = function(complete) {
 	// Note: using user agent is bad practice. I am lazy.
 	if (navigator.userAgent.match(/MSIE/i)) {
 		html.push('<object data="{swf}" id="dge_audio" type="application/x-shockwave-flash" width="0" height="0">');
-		html.push('<param name="movie" value="{swf}">');
-		html.push('<param name="allowFullScreen" value="false">');
-		html.push('<param name="allowScriptAccess" value="always">');
-		html.push('<param name="quality" value="high">');
+		html.push(' <param name="movie" value="{swf}">');
+		html.push(' <param name="allowFullScreen" value="false">');
+		html.push(' <param name="allowScriptAccess" value="always">');
+		html.push(' <param name="quality" value="high">');
 		html.push('</object>');
 	} else {
 		html.push('<embed');

@@ -166,11 +166,10 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 };
 
 /**
- * Gets or sets the angle used to travel from this Sprite to another.
- * @param {Object} target The target Sprite.
+ * Anchors this Sprite to DGE.stage.
  * @param {Boolean} setNow true to set the angle immediately (then returns this instead of angle).
  * @return {Number | Object} The angle or this for chaining.
- * @method angleTo
+ * @method anchorToStage
  */
 DGE.Sprite.prototype.anchorToStage = function() {
 

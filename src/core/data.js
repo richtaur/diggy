@@ -10,7 +10,12 @@ DGE.Data = new DGE.Object({
 
 DGE.Data.get = function(key) {
 
-	var value = localStorage[key];
+	if (typeof(localStorage) == 'undefined') {
+		// TODO
+		var value = null;
+	} else {
+		var value = localStorage[key];
+	}
 
 	if (value === 'true') {
 		return true;
@@ -34,7 +39,12 @@ DGE.Data.set = function(key, value) {
 
 		var previous = DGE.Data.data[key];
 		this.data[key] = value;
-		localStorage[key] = value;
+
+		if (typeof(localStorage) == 'undefined') {
+			// TODO
+		} else {
+			localStorage[key] = value;
+		}
 
 		if (value !== previous) {
 			DGE.Data.fire(DGE.sprintf('change:%s', key), value);
@@ -54,7 +64,12 @@ DGE.Data.set = function(key, value) {
 DGE.Data.empty = function() {
 
 	DGE.Data.data = {};
-	localStorage = {};
+
+	if (typeof(localStorage) == 'undefined') {
+		// TODO
+	} else {
+		localStorage = {};
+	}
 
 	return DGE.Data;
 
