@@ -44,10 +44,14 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 	var maxY = (height / spriteHeight);
 	var tileY = Math.floor(sheetIndex / maxX);
 	var tileX = (sheetIndex - (tileY * maxX));
-	var x = sheet.get('x') + (tileX * spriteWidth);
-	var y = sheet.get('y') + (tileY * spriteHeight);
+	var x = (sheet.get('x') || 0);
+	var y = (sheet.get('y') || 0);
+
+	x += (tileX * spriteWidth);
+	y += (tileY * spriteHeight);
 
 	this.setCSS('background-position', DGE.sprintf('-%spx -%spx', x, y));
+DGE.log('here!');
 
 });
 
@@ -62,8 +66,11 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 		var sheetY = (this.get('sheetY') || 0);
 		var spriteWidth = sheet.get('spriteWidth');
 		var spriteHeight = sheet.get('spriteHeight');
-		var x = (sheet.get('x') + (sheetX * spriteWidth));
-		var y = (sheet.get('y') + (sheetY * spriteHeight));
+		var x = (sheet.get('x') || 0);
+		var y = (sheet.get('y') || 0);
+
+		x += (sheetX * spriteWidth);
+		y += (sheetY * spriteHeight);
 
 		this.setCSS('background-position', DGE.sprintf('-%spx -%spx', x, y));
 		
@@ -77,6 +84,6 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 // TODO: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
 // TODO: should we set sheetIndexMax or something? We know what it it'll be.
 DGE.Sprite.set('sheet', null);
-DGE.Sprite.set('sheetIndex', 0);
+//DGE.Sprite.set('sheetIndex', 0);
 DGE.Sprite.set('sheetX', 0);
 DGE.Sprite.set('sheetY', 0);

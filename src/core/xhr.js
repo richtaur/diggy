@@ -52,11 +52,11 @@ DGE.xhr = function(method, url, callbacks, data) {
 			if ((typeof(data[i]) == 'object') && data[i].length) {
 
 				for (var a = 0; a < data[i].length; a++) {
-					post += printf('%[]=%&', i, encodeURIComponent(data[i][a]));
+					post += DGE.sprintf('%s[]=%s&', i, encodeURIComponent(data[i][a]));
 				}
 
 			} else {
-				post += printf('%=%&', i, encodeURIComponent(data[i]));
+				post += DGE.sprintf('%s=%s&', i, encodeURIComponent(data[i]));
 			}
 
 		}
@@ -74,7 +74,7 @@ DGE.xhr = function(method, url, callbacks, data) {
 
 			if (req.status == 200) {
 				if (callbacks.success) callbacks.success(req);
-			} else if (req.status == 404) {
+			} else {
 				if (callbacks.error) callbacks.error(req);
 			}
 

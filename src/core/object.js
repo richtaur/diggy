@@ -256,6 +256,40 @@
 		};
 
 		/**
+		 * Executes a method on an array of children that have the passed value set.
+		 * @param {String} key The key to look at.
+		 * @param {String} value The value to check.
+		 * @param {Function} fn The function to fire.
+		 * @return {Number} The number of objects operated on.
+		 * @method execByProperty
+		 * @static
+		 */
+		Obj.execByProperty = function(key, value, fn) {
+
+/*
+			var count = 0;
+
+			for (var id in Obj.children) {
+				if (Obj.children[id].get(key) == value) {
+					Obj.children[id].fn();
+          count++;
+				}
+			}
+
+			return count;
+*/
+
+      var children = Obj.getByProperty(key, value);
+
+      for (var i = 0; i < children.length; i++) {
+        children[i][fn]();
+      }
+
+      return children.length;
+
+		};
+
+		/**
 		 * Gets a child object by its id.
 		 * @param {String} id The id of the object to get.
 		 * @return {Object || null} The object if it exists or null on failure.
@@ -291,7 +325,7 @@
 		/**
 		 * Appends to the default events.
 		 * @param {String} key The the event to listen for.
-		 * @param {Function} fn The function to fire on.
+		 * @param {Function} fn The function to fire.
 		 * @method on
 		 * @static
 		 */

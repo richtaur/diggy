@@ -81,7 +81,16 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		var that = this;
 
 		this.node.onclick = function() {
-			fn.apply(that, arguments);
+			fn.apply(that, [DGE.Mouse.x, DGE.Mouse.y]);
+		};
+
+	},
+	'on:mouseMove' : function(fn) {
+
+		var that = this;
+
+		this.node.onmousemove = function() {
+			fn.apply(that, [DGE.Mouse.x, DGE.Mouse.y]);
 		};
 
 	},
@@ -90,7 +99,7 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		var that = this;
 
 		this.node.onmousedown = function() {
-			fn.apply(that, arguments);
+			fn.apply(that, [DGE.Mouse.x, DGE.Mouse.y]);
 		};
 
 	},
@@ -99,7 +108,7 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 		var that = this;
 
 		this.node.onmouseup = function() {
-			fn.apply(that, arguments);
+			fn.apply(that, [DGE.Mouse.x, DGE.Mouse.y]);
 		};
 
 	},
@@ -474,7 +483,8 @@ DGE.Sprite.prototype.setCSS = function(key, value) {
  * @method show
  */
 DGE.Sprite.prototype.show = function() {
-	return this.set('visible', true);
+	this.set('visible', true);
+  return this.fire('show');
 };
 
 /**
@@ -489,6 +499,7 @@ DGE.Sprite.prototype.hide = function(delay) {
 
 	function hide() {
 		that.set('visible', false);
+		that.fire('hide');
 	};
 
 	if (delay) {

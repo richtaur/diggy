@@ -1,4 +1,3 @@
-// TODO: REWRITE
 /**
  * Creates a percentage meter.
  * @namespace DGE
@@ -9,24 +8,30 @@ DGE.Meter = DGE.extend(DGE.Sprite, function(conf) {
 
 	this.init(conf);
 
-	this.meter = new DGE.Sprite({
-		addTo : this,
-		height : conf.height
+	this.meterSprite = new DGE.Sprite({
+		height : conf.height,
+		parent : this
 	});
 
 	this.refresh = function() {
 
-		this.meter.dimensions(this._width * (this.value() / this.total()));
+		this.meterSprite.set(
+			'width',
+			(this.width * (this.get('value') / this.get('total')))
+		);
 
 		if (conf.text) {
 			if (this.formatNumber) {
-				this.text.text(DGE.printf(
-					conf.text,
-					DGE.formatNumber(this.value()),
-					DGE.formatNumber(this.total()))
+				this.labelText.set(
+					'text',
+					DGE.printf(
+						conf.labelText,
+						DGE.formatNumber(this.get('value')),
+						DGE.formatNumber(this.get('total'))
+					)
 				);
 			} else {
-				this.text.text(DGE.printf(conf.text, this.value(), this.total()));
+				this.labelText.set('text', DGE.printf(conf.text, this.get('value'), this.get('total'));
 			}
 		}
 
@@ -47,10 +52,10 @@ DGE.Meter = DGE.extend(DGE.Sprite, function(conf) {
 
 	if (conf.text) {
 		this.setCSS('text-align', 'center');
-		this.text = new DGE.Text({
-			addTo : this
+		this.labelText = new DGE.Text({
+			parent : this
 		});
-		this.text.setCSS('position', 'relative');
+		this.labelText.setCSS('position', 'relative');
 	}
 
 	if (conf.total !== undefined) this.total(conf.total);
@@ -62,20 +67,6 @@ DGE.Meter.prototype.formatNumber = true;
 
 /**
  * The Sprite object that represents the value of the meter.
- * @property meter
+ * @property meterSprite
  */
-DGE.Meter.prototype.meter = null;
-
-/**
- * Sets the total.
- * @param {Number} total The new total.
- * @method total
- */
-DGE.Meter.prototype.total = function() {};
-
-/**
- * Sets the value.
- * @param {Number} value The new value.
- * @method value
- */
-DGE.Meter.prototype.value = function(){};
+DGE.Meter.prototype.meterSprite = null;

@@ -24,7 +24,7 @@ DGE.Audio = DGE.Object.make(function(conf) {
 		if (DGE.platform.name == DGE.platform.TITANIUM) {
 			this.node = Titanium.Media.createSound(file);
 		} else {
-			swf.load(this.id, file);
+			if (DGE.Audio.enabled) swf.load(this.id, file);
 		}
 
 	},
@@ -95,7 +95,7 @@ DGE.Audio.prototype.play = function() {
 DGE.Audio.prototype.stop = function() {
 
 	if (DGE.platform.name == DGE.platform.BROWSER) {
-		swf.stop(this.id);
+		if (DGE.Audio.enabled) swf.stop(this.id);
 		// The try/catch is here because this error gets thrown in Gecko and Webkit:
 		// An attempt was made to use an object that is not, or is no longer, usable" code: "11"
 		/*
@@ -134,10 +134,10 @@ DGE.Audio.available = (function() {
  * Note: audio can be available (supported by the platform)
  * but disabled (meaning this flag is set to false).
  * @property enabled
- * @default true
+ * @default false
  * @type Boolean
  */
-DGE.Audio.enabled = true;
+DGE.Audio.enabled = false;
 
 /**
  * The location of Diggy's .swf file for audio.
@@ -151,27 +151,36 @@ DGE.Audio.swfSrc = 'swf/external_interface.swf';
 
 /**
  * Initializes audio.
- * @param {Function} complete (optional) The callback to fire.
- * @method callback
+ * @param {Object} callbacks (optional) The callbacks to fire (complete, error).
+ * @param {Number} timeoutDelay (optional) The number of milliseconds to wait before timing out (default: 3000).
+ * @method init
  * @static
  */
-DGE.Audio.init = function(callback) {
+DGE.Audio.init = function(callbacks, timeoutDelay) {
 
-	callback = (callback || function() {});
+	callbacks = (callbacks || {});
+	timeoutDelay = (timeoutDelay || 3000);
 
 	if (DGE.platform.name == DGE.platform.TITANIUM) {
-		callback();
+		DGE.Audio.enabled = true;
+		if (callbacks.complete) callbacks.complete();
 		return;
 	}
 
 	var container = document.createElement('div');
 	var html = [];
+	var timeout = setTimeout(function() {
+		interval.stop();
+		if (callbacks.error) callbacks.error();
+	}, timeoutDelay);
 	var interval = new DGE.Interval({
 		delay : 100,
 		interval : function() {
 			if (swf && (typeof(swf.load) == 'function')) {
+				clearTimeout(timeout);
 				interval.stop();
-				callback();
+				DGE.Audio.enabled = true;
+				if (callbacks.complete) callbacks.complete();
 			}
 		}
 	});

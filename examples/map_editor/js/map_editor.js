@@ -3,9 +3,9 @@ mapEditor = (function() {
 	var BUFFER = 6;
 	var UI_WIDTH = 30;
 	var UI_HEIGHT = 30;
-	var Z_INDEX_UI = 3;
-	var Z_INDEX_ABOVE = 2;
-	var Z_INDEX_BELOW = 1;
+	var Z_UI = 3;
+	var Z_ABOVE = 2;
+	var Z_BELOW = 1;
 
 	var brush = {
 		x : 0,
@@ -28,12 +28,10 @@ mapEditor = (function() {
 		editorConf = conf;
 
 		DGE.init({
-			stage : {
-				id : 'map_editor',
-				background : '#000',
-				width : editorConf.width,
-				height : editorConf.height
-			}
+			id : 'map_editor',
+			background : '#000',
+			width : editorConf.width,
+			height : editorConf.height
 		});
 
 		DGE.Text.defaults.color = editorConf.fgColor;
@@ -49,6 +47,23 @@ mapEditor = (function() {
 */
 		});
 
+		sheets.tiles = new DGE.Sprite.Sheet({
+			image : editorConf.imageSrc,
+			spriteWidth : editorConf.tileWidth,
+			spriteHeight : editorConf.tileHeight,
+			width : DGE.stage.width,
+			height : DGE.stage.height
+		});
+
+		sheets.ui = new DGE.Sprite.Sheet({
+			image : 'gfx/ui.png',
+			spriteWidth : UI_WIDTH,
+			spriteHeight : UI_HEIGHT,
+			width : DGE.stage.width,
+			height : DGE.stage.height
+		});
+
+		/*
 		sheets.tiles = new DGE.SpriteSheet(
 			editorConf.imageSrc,
 			editorConf.tileWidth,
@@ -60,35 +75,37 @@ mapEditor = (function() {
 			UI_WIDTH,
 			UI_HEIGHT
 		);
+		*/
 
 		initUI();
 
 		ui.brushDialog = new DGE.Sprite({
-			click : function(x, y) {
-
-				var tx = Math.floor((x - this._x) / editorConf.tileWidth);
-				var ty = Math.floor((y - this._y) / editorConf.tileHeight);
-
-				drop(tx, ty);
-
-			},
+			background : '#000',
 			cursor : true,
-			fill : '#000',
-			hide : true,
 			image : editorConf.imageSrc,
-			opacity : 0.8,
+			opacity : 80,
 			over : function() {
 				isOverMap = false;
 			},
 			out : function() {
 				isOverMap = true;
 			},
-			width : (DGE.STAGE_WIDTH - (BUFFER * 2)),
-			height : (DGE.STAGE_HEIGHT - (BUFFER * 3) - UI_HEIGHT),
+			width : (DGE.stage.width - (BUFFER * 2)),
+			height : (DGE.stage.height - (BUFFER * 3) - UI_HEIGHT),
 			x : BUFFER,
 			y : ((BUFFER * 2) + UI_HEIGHT),
-			zIndex : Z_INDEX_UI
-		}).setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
+			z : Z_UI
+		})
+			.hide()
+			.on('click', function(x, y) {
+
+				var tx = Math.floor((x - this.x) / editorConf.tileWidth);
+				var ty = Math.floor((y - this.y) / editorConf.tileHeight);
+
+				drop(tx, ty);
+
+			})
+			.setCSS('border', DGE.sprintf('1px solid %s', editorConf.fgColor));
 
 /*
 		ui.mapDialog = new DGE.Sprite({
@@ -109,115 +126,131 @@ mapEditor = (function() {
 			height : (DGE.STAGE_HEIGHT - (BUFFER * 3) - UI_HEIGHT),
 			x : BUFFER,
 			y : ((BUFFER * 2) + UI_HEIGHT),
-			zIndex : Z_INDEX_UI
-		}).setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
+			z : Z_UI
+		}).setCSS('border', DGE.sprintf('1px solid %s', editorConf.fgColor));
 */
 
 		ui.saveDialog = new DGE.Text({
-			fill : editorConf.bgColor,
+			background : editorConf.bgColor,
 			font : 'Courier, Sans-Serif',
-			hide : true,
-			opacity : 0.8,
+			opacity : 80,
 			over : function() {
 				isOverMap = false;
 			},
 			out : function() {
 				isOverMap = true;
 			},
-			width : (DGE.STAGE_WIDTH - (BUFFER * 2)),
-			height : (DGE.STAGE_HEIGHT - (BUFFER * 3) - UI_HEIGHT),
+			width : (DGE.stage.width - (BUFFER * 2)),
+			height : (DGE.stage.height - (BUFFER * 3) - UI_HEIGHT),
 			x : BUFFER,
 			y : ((BUFFER * 2) + UI_HEIGHT),
-			zIndex : Z_INDEX_UI
-		}).setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
+			z : Z_UI
+		})
+			.hide()
+			.setCSS('border', DGE.sprintf('1px solid %s', editorConf.fgColor));
 
-		DGE.controls.down(keyDown);
-		DGE.Mouse.down(move);
-		DGE.Mouse.move(move);
+		DGE.Keyboard.on('keyDown', keyDown);
+		DGE.stage.on('mouseDown', function(x, y) {
+			DGE.Mouse.down = true;
+			move(x, y);
+		});
+		DGE.stage.on('mouseMove', move);
 		move(0, 0);
 
 	};
 
 	function initUI() {
 
-		var uiX = (DGE.STAGE_WIDTH - BUFFER - UI_WIDTH);
+		var uiX = (DGE.stage.width - BUFFER - UI_WIDTH);
 
 		ui.mouseCoords = new DGE.Text({
 			id : 'mouse_coords',
+			shadow : '0px 0px 3px #000',
+			width : 200,
+			height : 30,
 			x : BUFFER,
 			y : BUFFER,
-			zIndex : Z_INDEX_UI
-		}).shadow('0px 0px 3px #000');
+			z : Z_UI
+		});
 
 		ui.saveButton = new DGE.Sprite({
-			click : function() {
+			cursor : true,
+			sheet : sheets.ui,
+			sheetX : 1,
+			sheetY : 5,
+			width : UI_WIDTH,
+			height : UI_HEIGHT,
+			x : uiX,
+			y : BUFFER,
+			z : Z_UI
+		})
+			.on('click', function() {
 
-				ui.saveDialog.toggle();
+				ui.saveDialog.toggleVisibility();
 
-				if (ui.saveDialog._visible) {
+				if (ui.saveDialog.get('visible')) {
 					showSave();
 				}
 
-			},
-			cursor : true,
-			over : function() {
+			})
+			.on('over', function() {
 				isOverMap = false;
-			},
-			out : function() {
+			})
+			.on('out', function() {
 				isOverMap = true;
-			},
-			x : uiX,
-			y : BUFFER,
-			zIndex : Z_INDEX_UI
-		})
-			.setSheet(sheets.ui)
-			.setSheetCoords(1, 5);
+			});
 
 		uiX -= (BUFFER + UI_WIDTH);
 
 		ui.newButton = new DGE.Sprite({
-			click : function() {
+			cursor : true,
+			sheet : sheets.ui,
+			sheetX : 2,
+			sheetY : 5,
+			width : UI_WIDTH,
+			height : UI_HEIGHT,
+			x : uiX,
+			y : BUFFER,
+			z : Z_UI
+		})
+			.on('click', function() {
 				if (confirm('Discard changes?')) {
 					newMap();
 				}
-			},
-			cursor : true,
-			over : function() {
+			})
+			.on('over', function() {
 				isOverMap = false;
-			},
-			out : function() {
+			})
+			.on('out', function() {
 				isOverMap = true;
-			},
-			x : uiX,
-			y : BUFFER,
-			zIndex : Z_INDEX_UI
-		})
-			.setSheet(sheets.ui)
-			.setSheetCoords(2, 5);
+			});
 
 		uiX -= (BUFFER + UI_WIDTH);
 
 		ui.loadButton = new DGE.Sprite({
-			click : function() {
+			cursor : true,
+			sheet : sheets.ui,
+			sheetX : 0,
+			sheetY : 5,
+			width : UI_WIDTH,
+			height : UI_HEIGHT,
+			x : uiX,
+			y : BUFFER,
+			z : Z_UI
+		})
+			.on('click', function() {
 
-				var filename = prompt('Which map which you like to load?');
+				var filename = prompt('Which map would you like to load?');
 
 				if (filename) loadMap(filename);
 
-			},
-			cursor : true,
-			over : function() {
+			})
+			.on('over', function() {
 				isOverMap = false;
-			},
-			out : function() {
+			})
+			.on('out', function() {
 				isOverMap = true;
-			},
-			x : uiX,
-			y : BUFFER,
-			zIndex : Z_INDEX_UI
-		})
-			.setSheet(sheets.ui)
-			.setSheetCoords(0, 5);
+			});
 
 		uiX -= (BUFFER + UI_WIDTH);
 
@@ -243,7 +276,7 @@ mapEditor = (function() {
 			},
 			x : uiX,
 			y : BUFFER,
-			zIndex : Z_INDEX_UI
+			z : Z_UI
 		})
 			.setSheet(sheets.ui)
 			.setSheetCoords(6, 4);
@@ -252,56 +285,66 @@ mapEditor = (function() {
 */
 
 		ui.depthButton = new DGE.Sprite({
-			click : function() {
-				if (depth == 'below') {
-					depth = 'above'
-					this.setSheetCoords(1, 0);
-				} else {
-					depth = 'below'
-					this.setSheetCoords(4, 3);
-				}
-			},
 			cursor : true,
-			over : function() {
-				isOverMap = false;
-			},
-			out : function() {
-				isOverMap = true;
-			},
+			sheet : sheets.ui,
+			sheetX : 4,
+			sheetY : 3,
+			width : UI_WIDTH,
+			height : UI_HEIGHT,
 			x : uiX,
 			y : BUFFER,
-			zIndex : Z_INDEX_UI
+			z : Z_UI
 		})
-			.setSheet(sheets.ui)
-			.setSheetCoords(4, 3);
+			.on('click', function() {
+				if (depth == 'below') {
+					depth = 'above'
+					this.set('sheetX', 1);
+					this.set('sheetY', 0);
+				} else {
+					depth = 'below'
+					this.set('sheetX', 4);
+					this.set('sheetY', 3);
+				}
+			})
+			.on('over', function() {
+				isOverMap = false;
+			})
+			.on('out', function() {
+				isOverMap = true;
+			});
 
 		uiX -= (BUFFER + UI_WIDTH);
 
 		ui.brushDialogButton = new DGE.Sprite({
-			click : function() {
-
-				ui.brushDialog.toggle();
-
-				if (ui.brushDialog._visible) {
-					this.setSheetCoords(6, 0);
-				} else {
-					this.setSheetCoords(6, 3);
-				}
-
-			},
 			cursor : true,
-			over : function() {
-				isOverMap = false;
-			},
-			out : function() {
-				isOverMap = true;
-			},
+			sheet : sheets.ui,
+			sheetX : 6,
+			sheetY : 3,
+			width : UI_WIDTH,
+			height : UI_HEIGHT,
 			x : uiX,
 			y : BUFFER,
-			zIndex : Z_INDEX_UI
+			z : Z_UI
 		})
-			.setSheet(sheets.ui)
-			.setSheetCoords(6, 3);
+			.on('click', function() {
+
+				ui.brushDialog.toggleVisibility();
+
+				if (ui.brushDialog.get('visible')) {
+					this.set('sheetX', 6);
+					this.set('sheetY', 0);
+				} else {
+					this.set('sheetX', 6);
+					this.set('sheetY', 3);
+				}
+
+			})
+			.on('over', function() {
+				isOverMap = false;
+			})
+			.on('out', function() {
+				isOverMap = true;
+			});
 
 		ui.paintHistory = [];
 
@@ -310,28 +353,33 @@ mapEditor = (function() {
 			uiX -= (BUFFER + UI_WIDTH);
 
 			ui.paintHistory.push(new DGE.Sprite({
-				click : function() {
-					drop(this._sheetX, this._sheetY);
-				},
 				cursor : true,
-				over : function() {
-					isOverMap = false;
-				},
-				out : function() {
-					isOverMap = true;
-				},
+				sheet : sheets.tiles,
+				sheetX : 5,
+				sheetY : 12,
+				width : editorConf.tileWidth,
+				height : editorConf.tileHeight,
 				x : uiX,
 				y : BUFFER,
-				zIndex : Z_INDEX_UI
+				z : Z_UI
 			})
-				.setSheet(sheets.tiles)
-				.setSheetCoords(5, 12));
+				.on('click', function() {
+					drop(this.get('sheetX'), this.get('sheetY'));
+				})
+				.on('over', function() {
+					isOverMap = false;
+				})
+				.on('out', function() {
+					isOverMap = true;
+				})
+			);
 
 		}
 
 		ui.paintHistory[0]
-			.setSheetCoords(0, 0)
-			.setCSS('border', DGE.printf('1px solid %s', editorConf.fgColor));
+			.set('sheetX', 0)
+			.set('sheetY', 0)
+			.setCSS('border', DGE.sprintf('1px solid %s', editorConf.fgColor));
 
 	};
 
@@ -343,34 +391,33 @@ mapEditor = (function() {
 		};
 
 		for (var i = (editorConf.paintHistory - 1); i > 0; i--) {
-			ui.paintHistory[i]._node.style.backgroundPosition = ui.paintHistory[i - 1]._node.style.backgroundPosition;
-			ui.paintHistory[i].setSheetCoords(
-				ui.paintHistory[i - 1]._sheetX,
-				ui.paintHistory[i - 1]._sheetY
-			);
+			ui.paintHistory[i].node.style.backgroundPosition = ui.paintHistory[i - 1].node.style.backgroundPosition;
+			ui.paintHistory[i].set('sheetX', ui.paintHistory[i - 1].get('sheetX'));
+			ui.paintHistory[i].set('sheetY', ui.paintHistory[i - 1].get('sheetY'));
 		}
 
-		ui.paintHistory[0].setSheetCoords(brush.x, brush.y);
+		ui.paintHistory[i].set('sheetX', brush.x);
+		ui.paintHistory[i].set('sheetY', brush.y);
 
 	};
 
 	function keyDown(keyCode) {
 
 		switch (keyCode) {
-			case DGE.controls.UP:
-				map._y += editorConf.tileHeight;
+			case DGE.Keyboard.UP:
+				map.y += editorConf.tileHeight;
 				map.plot();
 				break;
-			case DGE.controls.DOWN:
-				map._y -= editorConf.tileHeight;
+			case DGE.Keyboard.DOWN:
+				map.y -= editorConf.tileHeight;
 				map.plot();
 				break;
-			case DGE.controls.LEFT:
-				map._x += editorConf.tileWidth;
+			case DGE.Keyboard.LEFT:
+				map.x += editorConf.tileWidth;
 				map.plot();
 				break;
-			case DGE.controls.RIGHT:
-				map._x -= editorConf.tileWidth;
+			case DGE.Keyboard.RIGHT:
+				map.x -= editorConf.tileWidth;
 				map.plot();
 				break;
 		}
@@ -383,10 +430,9 @@ mapEditor = (function() {
 
 			DGE.xhr(
 				'GET',
-				DGE.printf('maps/%s', filename),
-				{
+				DGE.sprintf('maps/%s', filename), {
 					error : function(e) {
-						alert(DGE.printf('Error loading %s, sorry.', filename));
+						alert(DGE.sprintf('Error loading %s, sorry.', filename));
 					},
 					complete : function(data) {
 						setMap(DGE.json.decode(data.responseText));
@@ -395,7 +441,7 @@ mapEditor = (function() {
 			);
 
 		} catch(e) {
-			alert(DGE.printf("Couldn't find %s, sorry.", filename));
+			alert(DGE.sprintf("Couldn't find %s, sorry.", filename));
 		}
 
 	};
@@ -405,11 +451,12 @@ mapEditor = (function() {
 		var tx = Math.floor(x / editorConf.tileWidth);
 		var ty = Math.floor(y / editorConf.tileHeight);
 
-		ui.mouseCoords.text(
-			DGE.printf('Actual: %s, %s<br>Tile: %s, %s', x, y, tx, ty)
+		ui.mouseCoords.set(
+			'text',
+			DGE.sprintf('Actual: %s, %s<br>Tile: %s, %s', x, y, tx, ty)
 		);
 
-		if (!DGE.Mouse.isDown()) return;
+		if (!DGE.Mouse.down) return;
 		if (!isOverMap) return;
 
 		paint(x, y);
@@ -436,22 +483,26 @@ mapEditor = (function() {
 
 	function paint(x, y) {
 
-		var tx = Math.floor((x - map._x) / editorConf.tileWidth);
-		var ty = Math.floor((y - map._y) / editorConf.tileHeight);
-		var coords = DGE.printf('%s,%s', tx, ty);
+		var tx = Math.floor((x - map.x) / editorConf.tileWidth);
+		var ty = Math.floor((y - map.y) / editorConf.tileHeight);
+		var coords = DGE.sprintf('%s,%s', tx, ty);
 
 		if (coords in drawn[depth]) {
-			drawn[depth][coords].setSheetCoords(brush.x, brush.y);
+			drawn[depth][coords].set('sheetX', brush.x);
+			drawn[depth][coords].set('sheetY', brush.y);
 		} else {
 
 			drawn[depth][coords] = new DGE.Sprite({
-				addTo : map,
+				parent : map,
+				sheet : sheets.tiles,
+				sheetX : brush.x,
+				sheetY : brush.y,
 				x : (tx * editorConf.tileWidth),
 				y : (ty * editorConf.tileHeight),
 				width : editorConf.tileWidth,
 				height : editorConf.tileHeight,
-				zIndex : ((depth == 'below') ? Z_INDEX_BELOW : Z_INDEX_ABOVE)
-			}).setSheet(sheets.tiles).setSheetCoords(brush.x, brush.y);
+				z : ((depth == 'below') ? Z_BELOW : Z_ABOVE)
+			});
 
 		}
 
@@ -469,16 +520,19 @@ mapEditor = (function() {
 						if (data[key][x][y] !== null) {
 
 							var coords = data[key][x][y].split(',');
-							var drawnKey = DGE.printf('%s,%s', x, y);
+							var drawnKey = DGE.sprintf('%s,%s', x, y);
 
 							drawn[key][drawnKey] = new DGE.Sprite({
-								addTo : map,
+								parent : map,
+								sheet : sheets.tiles,
+								sheetX : coords[0],
+								sheetY : coords[1],
 								x : (x * editorConf.tileWidth),
 								y : (y * editorConf.tileHeight),
 								width : editorConf.tileWidth,
 								height : editorConf.tileHeight,
-								zIndex : ((key == 'below') ? Z_INDEX_BELOW : Z_INDEX_ABOVE)
-							}).setSheet(sheets.tiles).setSheetCoords(coords[0], coords[1]);
+								z : ((key == 'below') ? Z_BELOW : Z_ABOVE)
+							});
 						
 						}
 					}
@@ -502,16 +556,16 @@ mapEditor = (function() {
 				var coords = key.split(',');
 				var tx = coords[0];
 				var ty = coords[1];
-				var sx = drawn[depth][key]._sheetX;
-				var sy = drawn[depth][key]._sheetY;
+				var sx = drawn[depth][key].get('sheetX');
+				var sy = drawn[depth][key].get('sheetY');
 
 				if (!json[depth][tx]) json[depth][tx] = [];
-				json[depth][tx][ty] = DGE.printf('%s,%s', sx, sy);
+				json[depth][tx][ty] = DGE.sprintf('%s,%s', sx, sy);
 
 			}
 		}
 
-		ui.saveDialog.content(DGE.json.encode(json));
+		ui.saveDialog.set('text', DGE.json.encode(json));
 
 	};
 

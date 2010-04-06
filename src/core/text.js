@@ -56,9 +56,13 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 		return this.setCSS('font-size', px + 'px');
 	},
 	'change:text' : function(text) {
-		this.node.innerHTML = text;
+
 		var autoAdjust = this.get('autoAdjust');
+
+		if (autoAdjust) this.setCSS('width', 'auto');
+		this.node.innerHTML = text;
 		if (autoAdjust) this.adjust(autoAdjust);
+
 	}
 });
 
@@ -70,10 +74,11 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
  */
 DGE.Text.prototype.adjust = function(type) {
 
+	if (type === undefined) type = true;
+
 	if ((type === true) || (type == 'width')) {
 		this.setCSS('width', 'auto');
-DGE.log(this.node.style.width);
-DGE.log('offsetWidth:', this.node.offsetWidth);
+		this.node.innerHTML = this.node.innerHTML;
 		this.set('width', this.node.offsetWidth);
 	}
 

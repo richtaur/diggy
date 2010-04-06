@@ -135,9 +135,8 @@ DGE.platform.clickTerm = (function() {
  * @method init
  * @static
  */
-DGE.init = function(conf, complete) {
+DGE.init = function(conf) {
 	DGE.stage = new DGE.Sprite(conf);
-	DGE.Audio.init(complete);
 	return DGE.stage;
 };
 
