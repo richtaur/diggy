@@ -81,8 +81,8 @@ DGE.log('here!');
 
 })();
 
-// TODO: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
-// TODO: should we set sheetIndexMax or something? We know what it it'll be.
+// todo: investigate DGE.Object.defaults and whatever else VS DGE.Object.set/on
+// todo: should we set sheetIndexMax or something? We know what it it'll be.
 DGE.Sprite.set('sheet', null);
 //DGE.Sprite.set('sheetIndex', 0);
 DGE.Sprite.set('sheetX', 0);

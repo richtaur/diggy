@@ -1,5 +1,5 @@
-// TODO: make autoAdjust account for padding?
-// TODO: autoAdjust: width is not fucking working
+// todo: make autoAdjust account for padding? ugh, what a shitty method
+// todo: autoAdjust: width is not fucking working, it's crap
 /**
  * Extends DGE.Sprite with features helpful for rendering text.
 

@@ -73,9 +73,9 @@ DGE.xhr = function(method, url, callbacks, data) {
 			if (callbacks.complete) callbacks.complete(req);
 
 			if (req.status == 200) {
-				if (callbacks.success) callbacks.success(req);
+				if (callbacks.success) callbacks.success(req.responseText);
 			} else {
-				if (callbacks.error) callbacks.error(req);
+				if (callbacks.error) callbacks.error(req.status);
 			}
 
 		}

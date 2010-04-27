@@ -4,11 +4,11 @@
  * <h3>Example usage:<h3>
  * <ol>
  *	<li>var interval = new DGE.Interval({</li>
- *  <li>	delay : 100,</li>
- *  <li>	interval : function,</li>
- *  <li>		DGE.log('interval!');</li>
- *  <li>	}</li>
- *  <li>});</li>
+ *	<li>	delay : 100,</li>
+ *	<li>	interval : function,</li>
+ *	<li>		DGE.log('interval!');</li>
+ *	<li>	}</li>
+ *	<li>});</li>
  *	<li></li>
  *	<li>interval.start();</li>
  *	<li></li>

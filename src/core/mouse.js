@@ -3,12 +3,12 @@
 
  * <h3>Example usage:<h3>
  * <ol>
- *  <li>var x = DGE.Mouse.x;</li>
- *  <li>var y = DGE.Mouse.y;</li>
- *  <li>if (DGE.Mouse.down) DGE.log('mouse is down');</li>
- *  <li></li>
- *  <li>// Listen for the mouse click event</li>
- *  <li>DGE.stage.on('click', myClickFunction);</li>
+ *	<li>var x = DGE.Mouse.x;</li>
+ *	<li>var y = DGE.Mouse.y;</li>
+ *	<li>if (DGE.Mouse.down) DGE.log('mouse is down');</li>
+ *	<li></li>
+ *	<li>// Listen for the mouse click event</li>
+ *	<li>DGE.stage.on('click', myClickFunction);</li>
  * </ol>
 
  * @namespace DGE

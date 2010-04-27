@@ -53,6 +53,10 @@ DGE.Sprite = DGE.Object.make(function(conf) {
 	'change:rotation' : function(angle) {
 		this.setCSS('rotation', DGE.sprintf('%sdeg', angle));
 	},
+	'change:title' : function(title) {
+		this.node.alt = title;
+		this.node.title = title;
+	},
 	'change:visible' : function(visible) {
 		this.setCSS('display', (visible ? '' : 'none'));
 	},
@@ -163,8 +167,9 @@ DGE.Sprite.prototype.initSprite = function(conf) {
 		delay : conf.delay,
 		interval : function() {
 
-			if (that.get('velocity')) that.move();
 			that.fire('ping');
+			if (that.get('active') && that.get('velocity')) that.move();
+			that.offset('frame', 1);
 
 		},
 		scope : that
@@ -288,10 +293,10 @@ DGE.Sprite.prototype.getAngleTo = function() {
 	}
 
 	var center = this.getCenter();
-  var x = (center.x - toX);
-  var y = (center.y - toY);
-  var angle = Math.atan2(y, x);
-  angle = ((angle * 180) / Math.PI);
+	var x = (center.x - toX);
+	var y = (center.y - toY);
+	var angle = Math.atan2(y, x);
+	angle = ((angle * 180) / Math.PI);
 
 	return angle;
 
@@ -405,15 +410,15 @@ DGE.Sprite.prototype.move = function() {
 	if (!velocity) return this;
 
 	// What the fuck is wrong with me I used to know how to do this
-	angle = (270 - angle);
-	var r = ((angle * Math.PI) / 180);
+	var coords = DGE.getCoordsByAngleVelocity(
+		angle,
+		(velocity * offset)
+	);
 
-	this.x += (Math.sin(r) * velocity * offset);
-	this.y += (Math.cos(r) * velocity * offset);
+	this.offset('x', coords.x);
+	this.offset('y', coords.y);
 
-	this.offset('frame', 1);
-
-	return this.plot();
+	return this;
 
 };
 
@@ -484,7 +489,7 @@ DGE.Sprite.prototype.setCSS = function(key, value) {
  */
 DGE.Sprite.prototype.show = function() {
 	this.set('visible', true);
-  return this.fire('show');
+	return this.fire('show');
 };
 
 /**

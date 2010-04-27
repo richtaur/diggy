@@ -1,4 +1,3 @@
-// TODO: need to check if localStorage exists. It doesn't in IE and Titanium. Find solutions for those.
 /**
  * An extremely simple persistent memory manager.
  * @namespace DGE

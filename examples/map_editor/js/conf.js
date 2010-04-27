@@ -3,7 +3,11 @@
 var conf = {
 	fgColor : '#FFF',
 	bgColor : '#000',
-	imageSrc : 'gfx/environment.png',
+  font : 'Verdana',
+  fontSize : 12,
+	imageSrc : 'gfx/environment_x3.png',
+  imageWidth : 384,
+  imageHeight : 384,
 	paintHistory : 3,
 	tileWidth : 24,
 	tileHeight : 24,

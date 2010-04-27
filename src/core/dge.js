@@ -1,13 +1,12 @@
 /**
  * Diggy (DGE): DHTML Game Engine.<br>
- * http://diggy.sistertrain.com/
+ * http://github.com/richtaur/diggy/
  * @namespace
  * @module Diggy
  */
 
-// TODO: rethink the concept of Assets, Loader and loading ... DGE.init itself needs to wait for the .swf file to load, for example
-// TODO: redo the makeId() stuff to instead increment a number?
-// TODO: need to rethink Assets and Loader, they should almost be the same thing?
+// todo: rethink the concept of Assets, Loader and loading ... DGE.init itself needs to wait for the .swf file to load, for example
+// todo: redo the makeId() stuff to instead increment a number?
 
 /**
  * DGE is the single global utilizied by Diggy.
@@ -150,17 +149,17 @@ DGE.init = function(conf) {
  */
 DGE.attrMethod = function(that, change) {
 
-  var attr;
+	var attr;
 
-  return function(a) {
+	return function(a) {
 
-    if (a === undefined) return attr;
-    attr = a;
-    if (change) change.apply(that, arguments);
+		if (a === undefined) return attr;
+		attr = a;
+		if (change) change.apply(that, arguments);
 
-    return that;
+		return that;
 
-  };
+	};
 
 };
 
@@ -252,6 +251,26 @@ DGE.formatNumber = function(n) {
 };
 
 /**
+ * Gets the new coords based on angle and velocity.
+ * @param {Number} angle The angle to use (0-360).
+ * @param {Number} velocity The velocity to use.
+ * @method getCoordsByAngleVelocity
+ * @return {Object} An object of coordinates as: {x : x, y : y}.
+ * @static
+ */
+DGE.getCoordsByAngleVelocity = function(angle, velocity) {
+
+	angle = (270 - angle);
+	var r = ((angle * Math.PI) / 180);
+
+	return {
+		x : (Math.sin(r) * velocity),
+		y : (Math.cos(r) * velocity)
+	};
+
+};
+
+/**
  * Gets a DOM element.
  * @param {Object | String} Element or String (id).
  * @return {Object} The DOM element (or undefined on failure).
@@ -315,10 +334,10 @@ DGE.makeId = function(length) {
  * @static
  */
 DGE.on = (document.addEventListener ? function(el, e, fn) {
-    el.addEventListener(e, fn, false);
-  } : function(el, e, fn) {
-    el.attachEvent('on' + e, fn);
-  }
+		el.addEventListener(e, fn, false);
+	} : function(el, e, fn) {
+		el.attachEvent('on' + e, fn);
+	}
 );
 
 /**
@@ -331,11 +350,11 @@ DGE.on = (document.addEventListener ? function(el, e, fn) {
  */
 DGE.rand = function(from, to) {
 
-  if (from.length === undefined) {
+	if (from.length === undefined) {
 		return (from + Math.floor((to - from + 1) * Math.random())); 
-  } else {
-    return arguments.callee(0, (from.length - 1));
-  }
+	} else {
+		return arguments.callee(0, (from.length - 1));
+	}
 
 };
 
@@ -391,8 +410,8 @@ DGE.setCSS = (function() {
 				el.style['-webkit-box-shadow'] = value;
 				/*
 					If I *ever* feel like wasting some time, I guess I could make this work in IE. Here's how:
-					filter:  progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff'); / IE6,IE7 /
-          -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff')"; / IE8 /
+					filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff'); / IE6,IE7 /
+					-ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=0px, OffY=0px, Color='#ffffff')"; / IE8 /
 				*/
 				break;
 
@@ -430,11 +449,11 @@ DGE.setCSS = (function() {
  */
 DGE.sprintf = function(str) {
 
-  for (var i = 1; i < arguments.length; i++) {
-    str = str.replace(/%s/, arguments[i]);
-  }
+	for (var i = 1; i < arguments.length; i++) {
+		str = str.replace(/%s/, arguments[i]);
+	}
 
-  return str;
+	return str;
 
 };
 

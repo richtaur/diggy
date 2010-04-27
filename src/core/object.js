@@ -1,5 +1,5 @@
-// TODO: use privates, check DGE.Object for crap like .events and .listeners or whatever
-// TODO: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
+// todo: use privates, check DGE.Object for crap like .events and .listeners or whatever
+// todo: also, instead of hard-coding .node, .x, .y, .parent, etc., why not set an isEnumerable flag?
 (function() {
 
 	function makeObject(fn, defaultSet, defaultEvents) {
@@ -272,20 +272,20 @@
 			for (var id in Obj.children) {
 				if (Obj.children[id].get(key) == value) {
 					Obj.children[id].fn();
-          count++;
+					count++;
 				}
 			}
 
 			return count;
 */
 
-      var children = Obj.getByProperty(key, value);
+			var children = Obj.getByProperty(key, value);
 
-      for (var i = 0; i < children.length; i++) {
-        children[i][fn]();
-      }
+			for (var i = 0; i < children.length; i++) {
+				children[i][fn]();
+			}
 
-      return children.length;
+			return children.length;
 
 		};
 
