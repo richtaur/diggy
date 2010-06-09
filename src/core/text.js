@@ -22,7 +22,7 @@
  * @extends DGE.Sprite
  */
 DGE.Text = DGE.Sprite.extend(function(conf) {
-  this.initSprite(conf);
+	this.initSprite(conf);
 }, {
 	align : 'left',
 	autoAdjust : false,
@@ -59,7 +59,7 @@ DGE.Text = DGE.Sprite.extend(function(conf) {
 
 		var autoAdjust = this.get('autoAdjust');
 
-		if (autoAdjust) this.setCSS('width', 'auto');
+		if (autoAdjust && (autoAdjust == 'width')) this.setCSS('width', 'auto');
 		this.node.innerHTML = text;
 		if (autoAdjust) this.adjust(autoAdjust);
 

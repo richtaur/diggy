@@ -51,7 +51,6 @@ DGE.Sprite.on('change:sheetIndex', function(sheetIndex) {
 	y += (tileY * spriteHeight);
 
 	this.setCSS('background-position', DGE.sprintf('-%spx -%spx', x, y));
-DGE.log('here!');
 
 });
 

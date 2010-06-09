@@ -83,7 +83,10 @@ DGE.Audio.prototype.pause = function() {
  * @method play
  */
 DGE.Audio.prototype.play = function() {
-	if (DGE.Audio.enabled) swf.play(this.id);
+	try {
+		if (DGE.Audio.enabled) swf.play(this.id);
+	} catch(e) {};
+
 	return this.fire('play');
 };
 

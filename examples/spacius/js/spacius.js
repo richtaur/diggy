@@ -9,10 +9,10 @@
 	var VELOCITY_UFO = 3;
 
 	var main;
-	var music;
+	//var music;
 	var numUFOs;
 	var score;
-	var sfx;
+	//var sfx;
 	var ship;
 	var shots = [];
 	var stars = [];
@@ -103,6 +103,7 @@
 
 		}
 
+		/*
 		var music = new DGE.Audio({
 			file : 'audio/theme.ogg',
 			loop : true
@@ -116,6 +117,7 @@
 				file : 'audio/ufo_die.ogg'
 			})
 		};
+		*/
 
 		DGE.Keyboard.on('keyDown', keyDown);
 		//music.play();
@@ -130,7 +132,7 @@
 
 		score.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.get('points'))));
 		ship.center().show();
-		//DGE.Sprite.getByGroup(GROUP_UFOS, 'remove');
+		DGE.Sprite.execByProperty('group', GROUP_UFOS, 'remove');
 
 	};
 
@@ -147,7 +149,7 @@
 		for (var i = 0; i < NUM_SHOTS; i++) {
 			if (!shots[i].get('active')) {
 
-				sfx.shot.play();
+				//sfx.shot.play();
 
 				shots[i].plot((ship.x + ship.width), (ship.y + 2));
 				shots[i].show();
@@ -177,7 +179,7 @@
 
 				new DGE.Sprite({
 					image : 'gfx/ufo_ds.gif',
-					//group : GROUP_UFOS,
+					group : GROUP_UFOS,
 					velocity : VELOCITY_UFO,
 					x : DGE.stage.width,
 					y : DGE.rand(ship.height, (DGE.stage.height - 32)),
@@ -201,7 +203,7 @@
 						
 							if (shots[i].get('active') && this.isTouching(shots[i])) {
 
-								sfx.ufoDeath.play();
+								//sfx.ufoDeath.play();
 
 								score.set('points', (score.get('points') + 100));
 								score.set('text', DGE.sprintf('Score: %s', DGE.formatNumber(score.get('points'))));

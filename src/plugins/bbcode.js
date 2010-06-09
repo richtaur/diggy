@@ -1,6 +1,5 @@
 /*
- * Diggy (DGE): DHTML Game Engine.<br>
- * http://diggy.sistertrain.com/
+ * Diggy (DGE): DHTML Game Engine.
  */
 
 /*

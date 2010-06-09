@@ -266,19 +266,6 @@
 		 */
 		Obj.execByProperty = function(key, value, fn) {
 
-/*
-			var count = 0;
-
-			for (var id in Obj.children) {
-				if (Obj.children[id].get(key) == value) {
-					Obj.children[id].fn();
-					count++;
-				}
-			}
-
-			return count;
-*/
-
 			var children = Obj.getByProperty(key, value);
 
 			for (var i = 0; i < children.length; i++) {

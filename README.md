@@ -1,19 +1,25 @@
 # Diggy
 
-## About
-
 Diggy is a DHTML Game Engine (DGE).
 If you tried to pronounce "DGE", you'd probably say it like "Diggy".
 That explains the name.
 
-Diggy is not:
-	* useful for standard web apps
+Diggy is _not_:
 	* a DOM selector
 	* an event manager
 	* a canvas or SVG library
-	* meant to do anything but make games DOM games
+	* useful for standard web apps
+	* meant to do anything but make DOM games
 
-I am abandoning Diggy because it turns out I'd rather be making games using canvas.
+_Note: I am abandoning Diggy because it turns out I'd rather be making games using canvas. Go figure._
+
+## Known issues
+
+- Pretty sure `localStorage` doesn't work right.
+- Weird pseudo-Titanium support?
+- Breaks in IE (but fuck that browser anyway).
+- The whole inheritance pattern is really odd and kinda junky.
+- Just `grep` for "todo", holy crap.
 
 ## Author
 
