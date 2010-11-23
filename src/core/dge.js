@@ -173,7 +173,9 @@ DGE.log = function() {
 	switch (DGE.platform.name) {
 		case DGE.platform.BROWSER:
 			try {
-				console.log.apply(DGE, arguments);
+				if (console && console.log) {
+					console.log.apply(DGE, arguments);
+				}
 			} catch(e) {
 				//console.log(Array.prototype.join.apply(arguments, [',']));
 			}
